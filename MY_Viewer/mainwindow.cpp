@@ -1,15 +1,12 @@
 #include "mainwindow.h"
-#include "mainwindow.h"
-#include "mainwindow.h"
-#include "mainwindow.h"
 #include <QMenu>
+#include <QDebug>
 #include <QAction>
 #include <QMenuBar>
 #include <QToolBar>
-#include <QDebug>
-#include <QDockWidget>
-#include <QListWidget>
 #include <QStatusBar>
+#include <QListWidget>
+#include <QDockWidget>
 #include <mdimainwindow.h>
 
 

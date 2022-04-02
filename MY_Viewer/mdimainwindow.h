@@ -1,9 +1,9 @@
 #ifndef MDIMAINWINDOW_H
 #define MDIMAINWINDOW_H
 
-#include <QOpenGLWidget>
+#include <QMainWindow>
 
-class MDIMainWindow : public QOpenGLWidget
+class MDIMainWindow : public QMainWindow
 {
     Q_OBJECT
 public:
