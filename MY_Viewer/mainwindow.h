@@ -11,6 +11,10 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private:
+    void _addButtonAction();
+
+
 private slots:
     void _newFile();
     void _open();

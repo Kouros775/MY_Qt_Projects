@@ -27,11 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        mdimainwindow.cpp
+        mdimainwindow.cpp \
+    icommand.cpp \
+    commandopenfile.cpp
 
 HEADERS += \
         mainwindow.h \
-        mdimainwindow.h
+        mdimainwindow.h \
+    icommand.h \
+    commandopenfile.h
 
 FORMS +=
 
