@@ -5,7 +5,6 @@
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
 {
-    transformMatrix.scale()
 }
 
 
