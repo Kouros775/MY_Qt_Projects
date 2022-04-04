@@ -11,12 +11,18 @@
 #include <QApplication>
 
 
+#include "Command/commandopenfile.h"
+#include "Command/commandnewscene.h"
+
+
 #define IMAGE_PATH_NEW_ACTION ":/images/new.png"
 #define IMAGE_PATH_OPEN_ACTION ":/images/open.png"
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , commandOpenFile(nullptr)
+    , commandNewScene(nullptr)
 {
     _addButtonAction();
 
@@ -32,6 +38,11 @@ MainWindow::MainWindow(QWidget *parent)
     setCentralWidget(new MDIMainWindow());
 
     statusBar()->showMessage(tr("Ready"));
+
+    // >> Command
+    commandOpenFile = new CommandOpenFile();
+    commandNewScene = new CommandNewScene();
+    // << Command
 }
 
 MainWindow::~MainWindow()
@@ -70,16 +81,10 @@ void MainWindow::_addButtonAction()
 
 void MainWindow::_newFile()
 {
-    MDIMainWindow* temp = this->findChild<MDIMainWindow*>();
-    if(temp)
-    {
-        qDebug("찾았다.");
-    }
-
-    qDebug("Push NewFile Btn.");
+    commandNewScene->Execute();
 }
 
 void MainWindow::_open()
 {
-    qDebug("Push OpenFile Btn.");
+    commandOpenFile->Execute();
 }

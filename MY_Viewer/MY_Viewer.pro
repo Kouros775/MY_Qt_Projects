@@ -14,13 +14,17 @@ SOURCES += \
         mainwindow.cpp \
         mdimainwindow.cpp \
     openglwidget.cpp \
-    Command/icommand.cpp
+    Command/icommand.cpp \
+    Command/commandopenfile.cpp \
+    Command/commandnewscene.cpp
 
 HEADERS += \
         mainwindow.h \
         mdimainwindow.h \
     openglwidget.h \
-    Command/icommand.h
+    Command/icommand.h \
+    Command/commandopenfile.h \
+    Command/commandnewscene.h
 
 FORMS +=
 

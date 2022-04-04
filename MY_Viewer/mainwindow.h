@@ -3,6 +3,10 @@
 
 #include <QMainWindow>
 
+
+class ICommand;
+
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -19,6 +23,9 @@ private slots:
     void _newFile();
     void _open();
 
+private:
+    ICommand* commandOpenFile;
+    ICommand* commandNewScene;
 };
 
 #endif // MAINWINDOW_H
