@@ -14,6 +14,10 @@ public:
     // ICommand interface
 public:
     void Execute() final;
+
+private:
+    void translate();
+
 };
 
 #endif // COMMANDTRANSFORMTRANSLATE_H

@@ -6,6 +6,9 @@
 #include <QtOpenGL>
 #include <QGLShaderProgram>
 
+#include <memory>
+
+
 class Camera;
 
 class OpenGLWidget : public QOpenGLWidget
@@ -13,9 +16,9 @@ class OpenGLWidget : public QOpenGLWidget
     Q_OBJECT
 public:
     OpenGLWidget(QWidget* parent = nullptr);
-    virtual ~OpenGLWidget();
+    ~OpenGLWidget() override;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
     // openGL을 렌더링하기 위한 virtual 함수. QGLWidget 위젯을 업데이트하면
     // 이 함수가 호출된다.
     void paintGL() override;
@@ -45,7 +48,7 @@ private:
 
     QPoint prePoint;
 
-    Camera* camera;
+    std::shared_ptr<Camera> camera;
 };
 
 #endif // OPENGLWIDGET_H

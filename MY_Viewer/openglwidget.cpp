@@ -8,7 +8,7 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
     , camera(nullptr)
 {
-    camera = new Camera();
+    camera = std::make_shared<Camera>();
 }
 
 
