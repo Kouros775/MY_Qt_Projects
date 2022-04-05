@@ -16,7 +16,11 @@ SOURCES += \
     openglwidget.cpp \
     Command/icommand.cpp \
     Command/commandopenfile.cpp \
-    Command/commandnewscene.cpp
+    Command/commandnewscene.cpp \
+    Command/Transform/commandtransformtranslate.cpp \
+    Command/Transform/commandtransform.cpp \
+    Command/Transform/commandtransformrotate.cpp \
+    Command/Transform/commandtransformscale.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -24,7 +28,11 @@ HEADERS += \
     openglwidget.h \
     Command/icommand.h \
     Command/commandopenfile.h \
-    Command/commandnewscene.h
+    Command/commandnewscene.h \
+    Command/Transform/commandtransformtranslate.h \
+    Command/Transform/commandtransform.h \
+    Command/Transform/commandtransformrotate.h \
+    Command/Transform/commandtransformscale.h
 
 FORMS +=
 

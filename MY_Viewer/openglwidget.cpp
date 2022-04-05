@@ -65,5 +65,29 @@ void OpenGLWidget::initializeGL()
 
 
      vertices << QVector3D(1, 0, -2) << QVector3D(0, 1, -2)
-     << QVector3D(-1, 0, -2);
+              << QVector3D(-1, 0, -2);
+}
+
+
+// Down
+void OpenGLWidget::mousePressEvent(QMouseEvent *event)
+{
+    qDebug(__FUNCTION__);
+
+    prePoint.setX(event->x());
+    prePoint.setY(event->y());
+}
+
+
+// Up
+void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
+{
+    qDebug(__FUNCTION__);
+}
+
+
+// Move
+void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
+{
+    qDebug(__FUNCTION__);
 }

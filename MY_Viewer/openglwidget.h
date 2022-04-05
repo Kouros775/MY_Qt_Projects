@@ -26,12 +26,23 @@ public:
     // openGL 렌더링 context를 설정한다. 위의 함수가 호출되기 전 초기화를 위해 호출된다.
     void initializeGL() override;
 
+
+
+    // QWidget interface
+protected:
+    void mousePressEvent(QMouseEvent *event) override;
+    void mouseReleaseEvent(QMouseEvent *event) override;
+    void mouseMoveEvent(QMouseEvent *event) override;
+
+
 private:
     QMatrix4x4 projectionMatrix;
     QMatrix4x4 viewMatrix;
     QMatrix4x4 transformMatrix;
     QGLShaderProgram shaderProgram;
     QVector<QVector3D> vertices;
+
+    QPoint prePoint;
 };
 
 #endif // OPENGLWIDGET_H
