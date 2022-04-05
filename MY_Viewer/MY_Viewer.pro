@@ -20,7 +20,8 @@ SOURCES += \
     Command/Transform/commandtransformtranslate.cpp \
     Command/Transform/commandtransform.cpp \
     Command/Transform/commandtransformrotate.cpp \
-    Command/Transform/commandtransformscale.cpp
+    Command/Transform/commandtransformscale.cpp \
+    Render/camera.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -32,7 +33,8 @@ HEADERS += \
     Command/Transform/commandtransformtranslate.h \
     Command/Transform/commandtransform.h \
     Command/Transform/commandtransformrotate.h \
-    Command/Transform/commandtransformscale.h
+    Command/Transform/commandtransformscale.h \
+    Render/camera.h
 
 FORMS +=
 

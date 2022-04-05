@@ -6,6 +6,7 @@
 #include <QtOpenGL>
 #include <QGLShaderProgram>
 
+class Camera;
 
 class OpenGLWidget : public QOpenGLWidget
 {
@@ -43,6 +44,8 @@ private:
     QVector<QVector3D> vertices;
 
     QPoint prePoint;
+
+    Camera* camera;
 };
 
 #endif // OPENGLWIDGET_H
