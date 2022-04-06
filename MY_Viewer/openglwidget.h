@@ -3,14 +3,12 @@
 
 
 #include <QOpenGLWidget>
-#include <QtOpenGL>
-#include <QGLShaderProgram>
-
 #include <memory>
 
 
-class Camera;
 class CommandTransform;
+class Renderer;
+
 
 class OpenGLWidget : public QOpenGLWidget
 {
@@ -45,16 +43,10 @@ private:
 
 
 private:
-    QMatrix4x4 projectionMatrix;
-    QMatrix4x4 viewMatrix;
-    QMatrix4x4 transformMatrix;
-    QGLShaderProgram shaderProgram;
-    QVector<QVector3D> vertices;
-
     QPoint startPoint;
 
-    std::shared_ptr<Camera> camera;
     std::shared_ptr<CommandTransform> commandTranslate;
+    std::shared_ptr<Renderer> renderer;
 };
 
 #endif // OPENGLWIDGET_H

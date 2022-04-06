@@ -1,27 +1,25 @@
 #include "openglwidget.h"
 #include <QDebug>
+#include <QMouseEvent>
 
 #include "Command/Transform/commandtransformtranslate.h"
-#include "Render/camera.h"
+#include "Render/renderer.h"
 
 
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
-    , camera(nullptr)
     , commandTranslate(nullptr)
+    , renderer(nullptr)
 {
     commandTranslate = std::make_shared<CommandTransformTranslate>();
 
 
-    camera = std::make_shared<Camera>();
-
-    transformMatrix.setToIdentity();
+    renderer = std::make_shared<Renderer>();
 }
 
 
 OpenGLWidget::~OpenGLWidget()
 {
-
 }
 
 
@@ -33,18 +31,7 @@ QSize OpenGLWidget::sizeHint() const
 
 void OpenGLWidget::paintGL()
 {
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-
-     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-     shaderProgram.bind();
-     shaderProgram.setUniformValue("mvpMatrix", projectionMatrix * viewMatrix * transformMatrix);
-     shaderProgram.setUniformValue("color", QColor(Qt::black));
-     shaderProgram.setAttributeArray("vertex",vertices.constData());
-     shaderProgram.enableAttributeArray("vertex");
-     f->glDrawArrays(GL_TRIANGLES, 0, vertices.size());
-     shaderProgram.disableAttributeArray("vertex");
-     shaderProgram.release();
+    renderer->Paint();
 }
 
 
@@ -55,52 +42,12 @@ void OpenGLWidget::resizeGL(int width, int height)
         height = 1;
     }
 
-     projectionMatrix.setToIdentity();
-     //projectionMatrix.ortho((float)-width / 2, (float)width / 2, (float)-height / 2, (float)height / 2, 0.001, 1000);
-     projectionMatrix.perspective(60.0, (float)width / (float)height, 0.001, 1000);
-     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-     f->glViewport(0, 0, width, height);
+    renderer->Resize(width, height);
 }
 
 void OpenGLWidget::initializeGL()
 {
-    viewMatrix = camera->GetViewMatrix();
-
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-     f->glEnable(GL_DEPTH_TEST);
-     f->glEnable(GL_CULL_FACE);
-     f->glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-     shaderProgram.addShaderFromSourceFile(QGLShader::Vertex,
-    "://vertexshader.vert");
-     shaderProgram.addShaderFromSourceFile(QGLShader::Fragment,
-    "://fragmentshader.frag");
-     shaderProgram.link();
-
-     // >> 앞
-     vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-     vertices << QVector3D(-1, 1, -1) << QVector3D(-1, -1, -1) << QVector3D(1, -1, -1);
-
-     // 뒤
-     vertices << QVector3D(1, -1, 1) << QVector3D(1, 1, 1) << QVector3D(-1, 1, 1);
-     vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
-
-     // 오른쪽
-     vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(1, 1, 1);
-     vertices << QVector3D(1, 1, 1) << QVector3D(1, -1, -1) << QVector3D(1, -1, -1);
-
-     // 왼쪽
-     vertices << QVector3D(-1, -1, -1) << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1);
-     vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, -1) << QVector3D(-1, -1, -1);
-
-     // 위
-     vertices << QVector3D(1, 1, 1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-     vertices << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1) << QVector3D(1, 1, 1);
-
-     // 아래
-     vertices << QVector3D(1, -1, 1) << QVector3D(1, -1, -1) << QVector3D(-1, -1, -1);
-     vertices << QVector3D(-1, -1, -1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
-
+    renderer->Init();
 }
 
 
@@ -129,13 +76,13 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void OpenGLWidget::translate(const QPoint& startPoint, const QPoint& endPoint)
 {
-    commandTranslate->SetStartPoint(startPoint);
-    commandTranslate->SetEndPoint(endPoint);
-
-    commandTranslate->SetViewMatrix(camera->GetViewMatrix());
-    commandTranslate->SetProjectionMatrix(projectionMatrix);
-
-    commandTranslate->Execute();
-    QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
-    transformMatrix = updateMatrix * transformMatrix;
+    //commandTranslate->SetStartPoint(startPoint);
+    //commandTranslate->SetEndPoint(endPoint);
+    //
+    //commandTranslate->SetViewMatrix(camera->GetViewMatrix());
+    //commandTranslate->SetProjectionMatrix(projectionMatrix);
+    //
+    //commandTranslate->Execute();
+    //QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
+    //transformMatrix = updateMatrix * transformMatrix;
 }
