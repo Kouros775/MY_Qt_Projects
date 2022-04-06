@@ -10,6 +10,7 @@
 
 
 class Camera;
+class CommandTransform;
 
 class OpenGLWidget : public QOpenGLWidget
 {
@@ -38,6 +39,10 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
+private:
+    void translate(const QPoint& startPoint, const QPoint& endPoint);
+
+
 
 private:
     QMatrix4x4 projectionMatrix;
@@ -46,9 +51,10 @@ private:
     QGLShaderProgram shaderProgram;
     QVector<QVector3D> vertices;
 
-    QPoint prePoint;
+    QPoint startPoint;
 
     std::shared_ptr<Camera> camera;
+    std::shared_ptr<CommandTransform> commandTranslate;
 };
 
 #endif // OPENGLWIDGET_H

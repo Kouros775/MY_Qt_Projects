@@ -25,9 +25,10 @@ public:
     void SetViewMatrix(const QMatrix4x4& param){viewMatrix = param;}
     void SetProjectionMatrix(const QMatrix4x4& param){projectionMatrix = param;}
 
-    void SetUpdateMatrix(const QMatrix4x4& param) {updateMatrix = param;}
+    QMatrix4x4 GetUpdateMatrix() const {return updateMatrix;}
 protected:
-    QVector3D convertWorldToScreen(QPoint point) const;
+    QVector3D convertWorldToScreen(const QPoint& point) const;
+    void setUpdateMatrix(const QMatrix4x4& param) {updateMatrix = param;}
 
 
 private:

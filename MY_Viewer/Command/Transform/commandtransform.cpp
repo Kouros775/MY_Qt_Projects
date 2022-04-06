@@ -23,9 +23,15 @@ void CommandTransform::SetEndPoint(const QPoint &paramPoint)
 }
 
 
-QVector3D CommandTransform::convertWorldToScreen(QPoint point) const
+QVector3D CommandTransform::convertWorldToScreen(const QPoint& point) const
 {
     QVector3D world;
+
+
+    QMatrix4x4 invP = projectionMatrix.inverted();
+    QMatrix4x4 invV = viewMatrix.inverted();
+    QMatrix4x4 invW = transformMatrix.inverted();
+
 
     QMatrix4x4 WVP = projectionMatrix * viewMatrix * transformMatrix;
     QMatrix4x4 inverseWVP = WVP.inverted();
@@ -34,8 +40,8 @@ QVector3D CommandTransform::convertWorldToScreen(QPoint point) const
     screenPoint.setX(point.x());
     screenPoint.setY(point.y());
 
-    world = inverseWVP * screenPoint;
-    world.setZ(0.0f);
+    world = invW * invV * invP * screenPoint;
+
 
     return world;
 }
