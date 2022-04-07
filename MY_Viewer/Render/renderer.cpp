@@ -1,24 +1,17 @@
 #include "renderer.h"
-#include <QGLShaderProgram>
-#include <QOpenGLFunctions>
 
 
+#include "Command/Transform/commandtransformtranslate.h"
 #include "Render/camera.h"
 #include "Render/rendermodel.h"
 #include "Render/renderbase.h"
 
 
 Renderer::Renderer()
-    : shaderProgram(nullptr)
-    , camera(nullptr)
-    , renderBase(nullptr)
+    : renderBase(nullptr)
+    , commandTranslate(nullptr)
 {
     renderBase = std::make_shared<RenderBase>();
-
-
-    shaderProgram = std::make_shared<QGLShaderProgram>();
-    camera = std::make_shared<Camera>();
-
     transformMatrix.setToIdentity();
 }
 
@@ -31,96 +24,44 @@ Renderer::~Renderer()
 void Renderer::Init()
 {
     renderBase->Init();
-
-    viewMatrix = camera->GetViewMatrix();
-
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-     f->glEnable(GL_DEPTH_TEST);
-     f->glEnable(GL_CULL_FACE);
-     f->glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-
-     shaderProgram->addShaderFromSourceFile(QGLShader::Vertex,
-    "://vertexshader.vert");
-     shaderProgram->addShaderFromSourceFile(QGLShader::Fragment,
-    "://fragmentshader.frag");
-     shaderProgram->link();
 }
 
 
 void Renderer::Paint()
 {
     renderBase->Paint();
-
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-
-     f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-     shaderProgram->bind();
-     shaderProgram->setUniformValue("mvpMatrix", projectionMatrix * viewMatrix * transformMatrix);
-     shaderProgram->setUniformValue("color", QColor(Qt::black));
-     shaderProgram->setAttributeArray("vertex",renderModel->GetVertices().constData());
-     shaderProgram->enableAttributeArray("vertex");
-     f->glDrawArrays(GL_TRIANGLES, 0, renderModel->GetVertices().size());
-     shaderProgram->disableAttributeArray("vertex");
-     shaderProgram->release();
 }
 
 
 void Renderer::Resize(const int &width, const int &height)
 {
     renderBase->Resize(width, height);
-
-    projectionMatrix.setToIdentity();
-    //projectionMatrix.ortho((float)-width / 2, (float)width / 2, (float)-height / 2, (float)height / 2, 0.001, 1000);
-    projectionMatrix.perspective(60.0, (float)width / (float)height, 0.001, 1000);
-    QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
-    f->glViewport(0, 0, width, height);
 }
 
 
 bool Renderer::SetTransformMatrix(const QMatrix4x4& paramMatrix, const int &paramIndex)
 {
-    renderBase->SetTransformMatrix(paramMatrix, paramIndex);
-
-    bool bRes = false;
-    Q_UNUSED(paramIndex);
-
-    transformMatrix = paramMatrix;
-
-    return bRes;
-}
-
-void Renderer::GetTransformMatrix(QMatrix4x4 &outMatrix)
-{
-    renderBase->GetTransformMatrix(outMatrix);
-
-    outMatrix = transformMatrix;
+    return renderBase->SetTransformMatrix(paramMatrix, paramIndex);
 }
 
 
-bool Renderer::ApplyTransformMatrix(const QMatrix4x4 &paramMatrix, const int &paramIndex)
+bool Renderer::GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix)
 {
-    renderBase->ApplyTransformMatrix(paramMatrix, paramIndex);
+    return renderBase->GetTransformMatrix(paramIndex, outMatrix);
+}
 
-    bool bRes = false;
 
-    if(IsEmptyModelIndex(paramIndex) == false)
-    {
-        transformMatrix = paramMatrix * transformMatrix;
-    }
-
-    return bRes;
+bool Renderer::ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4 &paramMatrix)
+{
+    return renderBase->ApplyTransformMatrix(paramIndex, paramMatrix);
 }
 
 
 bool Renderer::IsEmptyModelIndex(const int &paramIndex)
 {
-    renderBase->IsEmptyModelIndex(paramIndex);
-
-    bool bRes = false;
-
-    return bRes;
+    return renderBase->IsEmptyModelIndex(paramIndex);
 }
+
 
 void Renderer::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
 {
@@ -128,16 +69,53 @@ void Renderer::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::GetProjectionMatrix
+/// \param outProjectionMatrix
+///
 void Renderer::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
 {
     renderBase->GetProjectionMatrix(outProjectionMatrix);
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::Translate - Model을 이동하는 함수.
+/// \param startPoint - Point 시작점
+/// \param endPoint - Point 끝점
+/// \param index - 적용하고자 하는 Model index
+/// \return - 성공했는지 여부
+///
 bool Renderer::Translate(const QPoint &startPoint, const QPoint &endPoint, const int &index)
 {
+    bool bRes = false;
 
+    if(!IsEmptyModelIndex(index))
+    {
+        commandTranslate->SetStartPoint(startPoint);
+        commandTranslate->SetEndPoint(endPoint);
+
+        QMatrix4x4 viewMatrix;
+        GetViewMatrix(viewMatrix);
+        QMatrix4x4 projectionMatrix;
+        GetProjectionMatrix(projectionMatrix);
+
+        commandTranslate->SetViewMatrix(viewMatrix);
+        commandTranslate->SetProjectionMatrix(projectionMatrix);
+
+        commandTranslate->Execute();
+        QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
+
+        bRes = ApplyTransformMatrix(index, updateMatrix);
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return bRes;
 }
+
 
 bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const int &index)
 {

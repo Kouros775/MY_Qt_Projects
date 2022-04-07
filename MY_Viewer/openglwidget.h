@@ -6,7 +6,7 @@
 #include <memory>
 
 
-class CommandTransform;
+
 class Renderer;
 
 
@@ -37,15 +37,9 @@ protected:
     void mouseReleaseEvent(QMouseEvent *event) override;
     void mouseMoveEvent(QMouseEvent *event) override;
 
-private:
-    void translate(const QPoint& startPoint, const QPoint& endPoint);
-
-
 
 private:
     QPoint prePoint;
-
-    std::shared_ptr<CommandTransform> commandTranslate;
     std::shared_ptr<Renderer> renderer;
 };
 

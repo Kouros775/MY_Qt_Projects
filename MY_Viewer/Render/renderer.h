@@ -4,9 +4,9 @@
 #include <QMatrix4x4>
 #include <memory>
 
+class CommandTransform;
 
-class Camera;
-class QGLShaderProgram;
+
 class RenderModel;
 class RenderBase;
 
@@ -22,8 +22,8 @@ public:
     void Resize(const int& width, const int& height);
     bool AddModel(const RenderModel& paramModel, const int& paramIndex);
     bool SetTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
-    void GetTransformMatrix(QMatrix4x4& outMatrix);
-    bool ApplyTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
+    bool GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix);
+    bool ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4& paramMatrix);
     bool IsEmptyModelIndex(const int& paramIndex);
 
     void GetViewMatrix(QMatrix4x4& outViewMatrix) const ;
@@ -38,13 +38,18 @@ private:
     QMatrix4x4 viewMatrix;
     QMatrix4x4 transformMatrix;
 
-    std::shared_ptr<QGLShaderProgram> shaderProgram;
-    std::shared_ptr<Camera> camera;
 
-    //QVector<QVector3D> vertices;
+
+
     const RenderModel* renderModel;
 
+
+private:
     std::shared_ptr<RenderBase> renderBase;
+
+    std::shared_ptr<CommandTransform> commandTranslate;
+    std::shared_ptr<CommandTransform> commandRotate;
+    std::shared_ptr<CommandTransform> commandScale;
 };
 
 #endif // RENDERER_H

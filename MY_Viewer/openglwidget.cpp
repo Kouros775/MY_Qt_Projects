@@ -9,12 +9,8 @@
 
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
-    , commandTranslate(nullptr)
     , renderer(nullptr)
 {
-    commandTranslate = std::make_shared<CommandTransformTranslate>();
-
-
     renderer = std::make_shared<Renderer>();
 }
 
@@ -72,27 +68,9 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 // Move
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    translate(this->prePoint, event->pos());
+    //translate(this->prePoint, event->pos());
 
     this->prePoint = event->pos();
 
     update();
-}
-
-void OpenGLWidget::translate(const QPoint& startPoint, const QPoint& endPoint)
-{
-    commandTranslate->SetStartPoint(startPoint);
-    commandTranslate->SetEndPoint(endPoint);
-
-    QMatrix4x4 viewMatrix;
-    renderer->GetViewMatrix(viewMatrix);
-    QMatrix4x4 projectionMatrix;
-    renderer->GetProjectionMatrix(projectionMatrix);
-
-    commandTranslate->SetViewMatrix(viewMatrix);
-    commandTranslate->SetProjectionMatrix(projectionMatrix);
-
-    commandTranslate->Execute();
-    QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
-    renderer->ApplyTransformMatrix(updateMatrix, 1);
 }

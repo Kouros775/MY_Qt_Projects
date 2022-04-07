@@ -32,3 +32,8 @@ RenderModel::~RenderModel()
 {
 
 }
+
+void RenderModel::DeepCopy(const RenderModel &paramModel)
+{
+    vertices = paramModel.GetVertices();
+}

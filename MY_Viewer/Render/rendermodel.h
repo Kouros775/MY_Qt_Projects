@@ -11,6 +11,7 @@ public:
     explicit RenderModel();
     ~RenderModel();
 
+    void DeepCopy(const RenderModel& paramModel);
     QVector<QVector3D> GetVertices() const {return vertices;}
 
 private:
