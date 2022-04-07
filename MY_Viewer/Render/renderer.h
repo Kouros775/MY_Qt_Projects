@@ -8,12 +8,14 @@
 class Camera;
 class QGLShaderProgram;
 class RenderModel;
+class RenderBase;
 
 
 class Renderer
 {
 public:
-    Renderer();
+    explicit Renderer();
+    ~Renderer();
 
     void Init();
     void Paint();
@@ -26,6 +28,11 @@ public:
 
     void GetViewMatrix(QMatrix4x4& outViewMatrix) const ;
     void GetProjectionMatrix(QMatrix4x4& outProjectionMatrix) const;
+
+    bool Translate(const QPoint& startPoint, const QPoint& endPoint, const int& index);
+    bool Rotate(const QPoint& startPoint, const QPoint& endPoint, const int& index);
+    bool Scale(const QPoint& startPoint, const QPoint& endPoint, const int& index);
+
 private:
     QMatrix4x4 projectionMatrix;
     QMatrix4x4 viewMatrix;
@@ -36,6 +43,8 @@ private:
 
     //QVector<QVector3D> vertices;
     const RenderModel* renderModel;
+
+    std::shared_ptr<RenderBase> renderBase;
 };
 
 #endif // RENDERER_H

@@ -1,11 +1,12 @@
 #ifndef RENDERBASE_H
 #define RENDERBASE_H
 
+#include <QMap>
+#include <QMatrix4x4>
+
 
 class RenderModel;
-class QMatrix4x4;
 
-#include <QMap>
 
 class RenderBase
 {
@@ -26,6 +27,10 @@ public:
 
 private:
     QMap<int, RenderModel*> renderMap;
+
+    QMatrix4x4 projectionMatrix;
+    QMatrix4x4 viewMatrix;
+    QMatrix4x4 transformMatrix;
 };
 
 #endif // RENDERBASE_H
