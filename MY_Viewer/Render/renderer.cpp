@@ -4,6 +4,7 @@
 
 
 #include "Render/camera.h"
+#include "Render/rendermodel.h"
 
 
 Renderer::Renderer()
@@ -15,6 +16,7 @@ Renderer::Renderer()
 
     transformMatrix.setToIdentity();
 }
+
 
 void Renderer::Init()
 {
@@ -30,35 +32,8 @@ void Renderer::Init()
      shaderProgram->addShaderFromSourceFile(QGLShader::Fragment,
     "://fragmentshader.frag");
      shaderProgram->link();
-
-
-
-
-     /////////////////
-     // >> 앞
-     vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-     vertices << QVector3D(-1, 1, -1) << QVector3D(-1, -1, -1) << QVector3D(1, -1, -1);
-
-     // 뒤
-     vertices << QVector3D(1, -1, 1) << QVector3D(1, 1, 1) << QVector3D(-1, 1, 1);
-     vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
-
-     // 오른쪽
-     vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(1, 1, 1);
-     vertices << QVector3D(1, 1, 1) << QVector3D(1, -1, -1) << QVector3D(1, -1, -1);
-
-     // 왼쪽
-     vertices << QVector3D(-1, -1, -1) << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1);
-     vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, -1) << QVector3D(-1, -1, -1);
-
-     // 위
-     vertices << QVector3D(1, 1, 1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-     vertices << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1) << QVector3D(1, 1, 1);
-
-     // 아래
-     vertices << QVector3D(1, -1, 1) << QVector3D(1, -1, -1) << QVector3D(-1, -1, -1);
-     vertices << QVector3D(-1, -1, -1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
 }
+
 
 void Renderer::Paint()
 {
@@ -69,12 +44,13 @@ void Renderer::Paint()
      shaderProgram->bind();
      shaderProgram->setUniformValue("mvpMatrix", projectionMatrix * viewMatrix * transformMatrix);
      shaderProgram->setUniformValue("color", QColor(Qt::black));
-     shaderProgram->setAttributeArray("vertex",vertices.constData());
+     shaderProgram->setAttributeArray("vertex",renderModel->GetVertices().constData());
      shaderProgram->enableAttributeArray("vertex");
-     f->glDrawArrays(GL_TRIANGLES, 0, vertices.size());
+     f->glDrawArrays(GL_TRIANGLES, 0, renderModel->GetVertices().size());
      shaderProgram->disableAttributeArray("vertex");
      shaderProgram->release();
 }
+
 
 void Renderer::Resize(const int &width, const int &height)
 {
@@ -83,4 +59,49 @@ void Renderer::Resize(const int &width, const int &height)
     projectionMatrix.perspective(60.0, (float)width / (float)height, 0.001, 1000);
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     f->glViewport(0, 0, width, height);
+}
+
+
+bool Renderer::SetTransformMatrix(const QMatrix4x4& paramMatrix, const int &paramIndex)
+{
+    bool bRes = false;
+    Q_UNUSED(paramIndex);
+
+    transformMatrix = paramMatrix;
+
+    return bRes;
+}
+
+void Renderer::GetTransformMatrix(QMatrix4x4 &outMatrix)
+{
+    outMatrix = transformMatrix;
+}
+
+bool Renderer::ApplyTransformMatrix(const QMatrix4x4 &paramMatrix, const int &paramIndex)
+{
+    bool bRes = false;
+
+    if(IsEmptyModelIndex(paramIndex) == false)
+    {
+        transformMatrix = paramMatrix * transformMatrix;
+    }
+
+    return bRes;
+}
+
+bool Renderer::IsEmptyModelIndex(const int &paramIndex)
+{
+    bool bRes = false;
+
+    return bRes;
+}
+
+
+bool Renderer::AddModel(const RenderModel& paramModel, const int& paramIndex)
+{
+    bool bRes = false;
+    Q_UNUSED(paramIndex);
+    renderModel = &paramModel;
+
+    return bRes;
 }

@@ -7,6 +7,7 @@
 
 class Camera;
 class QGLShaderProgram;
+class RenderModel;
 
 
 class Renderer
@@ -17,7 +18,11 @@ public:
     void Init();
     void Paint();
     void Resize(const int& width, const int& height);
-
+    bool AddModel(const RenderModel& paramModel, const int& paramIndex);
+    bool SetTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
+    void GetTransformMatrix(QMatrix4x4& outMatrix);
+    bool ApplyTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
+    bool IsEmptyModelIndex(const int& paramIndex);
 private:
     QMatrix4x4 projectionMatrix;
     QMatrix4x4 viewMatrix;
@@ -26,7 +31,8 @@ private:
     std::shared_ptr<QGLShaderProgram> shaderProgram;
     std::shared_ptr<Camera> camera;
 
-     QVector<QVector3D> vertices;
+    //QVector<QVector3D> vertices;
+    const RenderModel* renderModel;
 };
 
 #endif // RENDERER_H

@@ -4,6 +4,7 @@
 
 #include "Command/Transform/commandtransformtranslate.h"
 #include "Render/renderer.h"
+#include "Render/rendermodel.h"
 
 
 OpenGLWidget::OpenGLWidget(QWidget *parent)
@@ -48,13 +49,17 @@ void OpenGLWidget::resizeGL(int width, int height)
 void OpenGLWidget::initializeGL()
 {
     renderer->Init();
+
+    int tempIndex = 0;
+    RenderModel* model = new RenderModel();
+    renderer->AddModel(*model, tempIndex);
 }
 
 
 // Down
 void OpenGLWidget::mousePressEvent(QMouseEvent *event)
 {
-    this->startPoint = event->pos();
+    this->prePoint = event->pos();
 }
 
 
@@ -67,9 +72,9 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 // Move
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    translate(this->startPoint, event->pos());
+    translate(this->prePoint, event->pos());
 
-    this->startPoint = event->pos();
+    this->prePoint = event->pos();
 
     update();
 }

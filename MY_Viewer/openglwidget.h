@@ -43,7 +43,7 @@ private:
 
 
 private:
-    QPoint startPoint;
+    QPoint prePoint;
 
     std::shared_ptr<CommandTransform> commandTranslate;
     std::shared_ptr<Renderer> renderer;
