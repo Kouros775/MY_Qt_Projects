@@ -10,6 +10,7 @@ CONFIG += c++11
 LIBS += -lopengl32
 
 SOURCES += \
+    Render/rendermodel.cpp \
         main.cpp \
         mainwindow.cpp \
         mdimainwindow.cpp \
@@ -25,6 +26,7 @@ SOURCES += \
     Render/renderer.cpp
 
 HEADERS += \
+    Render/rendermodel.h \
         mainwindow.h \
         mdimainwindow.h \
     openglwidget.h \
