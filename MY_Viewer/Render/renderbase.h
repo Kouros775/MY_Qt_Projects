@@ -7,21 +7,15 @@
 #include <QMatrix4x4>
 
 
+class Camera;
 class RenderModel;
 class QGLShaderProgram;
-class Camera;
 
 
 class RenderBase
 {
     struct RenderObjectInfo
     {
-        RenderObjectInfo(const QMatrix4x4& paramMatrix, const RenderModel* paramModel)
-            : transformMatrix(paramMatrix)
-        {
-            renderModel = std::make_shared<RenderModel>();
-            //renderModel->
-        }
         QMatrix4x4 transformMatrix;
         std::shared_ptr<RenderModel> renderModel;
     };
@@ -46,7 +40,6 @@ private:
     QMap<int, RenderObjectInfo> renderMap;
 
     QMatrix4x4 projectionMatrix;
-    QMatrix4x4 viewMatrix;
 
     std::shared_ptr<QGLShaderProgram> shaderProgram;
     std::shared_ptr<Camera> camera;

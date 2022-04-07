@@ -2,7 +2,6 @@
 #include <QDebug>
 #include <QMouseEvent>
 
-#include "Command/Transform/commandtransformtranslate.h"
 #include "Render/renderer.h"
 #include "Render/rendermodel.h"
 
@@ -58,6 +57,7 @@ void OpenGLWidget::mousePressEvent(QMouseEvent *event)
 // Up
 void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 }
 
 
