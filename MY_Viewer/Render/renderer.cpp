@@ -12,8 +12,8 @@ Renderer::Renderer()
     , commandTranslate(nullptr)
 {
     renderBase = std::make_shared<RenderBase>();
-    transformMatrix.setToIdentity();
 }
+
 
 Renderer::~Renderer()
 {
@@ -39,7 +39,13 @@ void Renderer::Resize(const int &width, const int &height)
 }
 
 
-bool Renderer::SetTransformMatrix(const QMatrix4x4& paramMatrix, const int &paramIndex)
+bool Renderer::AddModel(const int& paramIndex, const RenderModel& paramModel)
+{
+    return renderBase->AddModel(paramModel, paramIndex);
+}
+
+
+bool Renderer::SetTransformMatrix(const int& paramIndex, const QMatrix4x4& paramMatrix)
 {
     return renderBase->SetTransformMatrix(paramMatrix, paramIndex);
 }
@@ -119,22 +125,18 @@ bool Renderer::Translate(const QPoint &startPoint, const QPoint &endPoint, const
 
 bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const int &index)
 {
-
+    Q_UNUSED(startPoint);
+    Q_UNUSED(endPoint);
+    Q_UNUSED(index);
 }
+
 
 bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const int &index)
 {
-
+    Q_UNUSED(startPoint);
+    Q_UNUSED(endPoint);
+    Q_UNUSED(index);
 }
 
 
-bool Renderer::AddModel(const RenderModel& paramModel, const int& paramIndex)
-{
-    renderBase->AddModel(paramModel, paramIndex);
 
-    bool bRes = false;
-    Q_UNUSED(paramIndex);
-    renderModel = &paramModel;
-
-    return bRes;
-}

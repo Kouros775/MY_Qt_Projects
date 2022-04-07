@@ -45,10 +45,6 @@ void OpenGLWidget::resizeGL(int width, int height)
 void OpenGLWidget::initializeGL()
 {
     renderer->Init();
-
-    int tempIndex = 0;
-    RenderModel* model = new RenderModel();
-    renderer->AddModel(*model, tempIndex);
 }
 
 
