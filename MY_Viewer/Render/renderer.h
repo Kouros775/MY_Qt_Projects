@@ -23,6 +23,9 @@ public:
     void GetTransformMatrix(QMatrix4x4& outMatrix);
     bool ApplyTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
     bool IsEmptyModelIndex(const int& paramIndex);
+
+    void GetViewMatrix(QMatrix4x4& outViewMatrix) const ;
+    void GetProjectionMatrix(QMatrix4x4& outProjectionMatrix) const;
 private:
     QMatrix4x4 projectionMatrix;
     QMatrix4x4 viewMatrix;

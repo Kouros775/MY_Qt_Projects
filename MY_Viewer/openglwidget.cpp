@@ -81,13 +81,18 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 
 void OpenGLWidget::translate(const QPoint& startPoint, const QPoint& endPoint)
 {
-    //commandTranslate->SetStartPoint(startPoint);
-    //commandTranslate->SetEndPoint(endPoint);
-    //
-    //commandTranslate->SetViewMatrix(camera->GetViewMatrix());
-    //commandTranslate->SetProjectionMatrix(projectionMatrix);
-    //
-    //commandTranslate->Execute();
-    //QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
-    //transformMatrix = updateMatrix * transformMatrix;
+    commandTranslate->SetStartPoint(startPoint);
+    commandTranslate->SetEndPoint(endPoint);
+
+    QMatrix4x4 viewMatrix;
+    renderer->GetViewMatrix(viewMatrix);
+    QMatrix4x4 projectionMatrix;
+    renderer->GetProjectionMatrix(projectionMatrix);
+
+    commandTranslate->SetViewMatrix(viewMatrix);
+    commandTranslate->SetProjectionMatrix(projectionMatrix);
+
+    commandTranslate->Execute();
+    QMatrix4x4 updateMatrix = commandTranslate->GetUpdateMatrix();
+    renderer->ApplyTransformMatrix(updateMatrix, 1);
 }

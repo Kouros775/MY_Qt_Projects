@@ -15,16 +15,13 @@ void CommandTransformTranslate::translate()
     QPoint startPoint = GetStartPoint();
     QPoint endPoint= GetEndPoint();
 
-    QPoint gap = endPoint - startPoint;
+    QVector3D worldStart = convertWorldToScreen(startPoint);
+    QVector3D worldEnd = convertWorldToScreen(endPoint);
 
-    QVector3D moveAmount = convertWorldToScreen(gap);
-
-    moveAmount.setZ(0.0f);
+    QVector3D moveAmount = worldEnd - worldStart;
     moveAmount.setY(moveAmount.y() * -1.0f);
-
 
     QMatrix4x4 updateMatrix;
     updateMatrix.translate(moveAmount);
-    //updateMatrix.translate(QVector3D(0.1f, 0.0f, 0.0f));
     setUpdateMatrix(updateMatrix);
 }

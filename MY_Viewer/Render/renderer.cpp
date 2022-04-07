@@ -96,6 +96,16 @@ bool Renderer::IsEmptyModelIndex(const int &paramIndex)
     return bRes;
 }
 
+void Renderer::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
+{
+    outViewMatrix = viewMatrix;
+}
+
+void Renderer::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
+{
+    outProjectionMatrix = projectionMatrix;
+}
+
 
 bool Renderer::AddModel(const RenderModel& paramModel, const int& paramIndex)
 {
