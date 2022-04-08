@@ -11,6 +11,9 @@ OpenGLWidget::OpenGLWidget(QWidget *parent)
     , renderer(nullptr)
 {
     renderer = std::make_shared<Renderer>();
+
+    RenderModel* model = new RenderModel();
+    renderer->AddModel(1, *model);
 }
 
 
@@ -65,7 +68,7 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
     //translate(this->prePoint, event->pos());
-
+    renderer->Translate(this->prePoint, event->pos(), 1);
     this->prePoint = event->pos();
 
     update();

@@ -63,15 +63,19 @@ void RenderBase::Paint()
 
         QMatrix4x4 viewMatrix = camera->GetViewMatrix();
         QMatrix4x4 transformMatrix = mapIter.value().transformMatrix;
+        QVector<QVector3D> vertex = mapIter.value().renderModel->GetVertices();
 
         shaderProgram->bind();
 
-        shaderProgram->setUniformValue("mvpMatrix", projectionMatrix * viewMatrix * transformMatrix);
+        shaderProgram->setUniformValue("viewMatrix", viewMatrix);
+        shaderProgram->setUniformValue("projectionMatrix", projectionMatrix);
+        shaderProgram->setUniformValue("transformMatrix", transformMatrix);
+
         shaderProgram->setUniformValue("color", QColor(Qt::black));
-        shaderProgram->setAttributeArray("vertex",mapIter.value().renderModel->GetVertices().constData());
+        shaderProgram->setAttributeArray("vertex",vertex.constData());
 
         shaderProgram->enableAttributeArray("vertex");
-        f->glDrawArrays(GL_TRIANGLES, 0, mapIter.value().renderModel->GetVertices().size());
+        f->glDrawArrays(GL_TRIANGLES, 0, vertex.size());
         shaderProgram->disableAttributeArray("vertex");
 
         shaderProgram->release();
