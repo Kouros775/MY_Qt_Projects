@@ -7,11 +7,14 @@
 class CommandTransformRotate : public CommandTransform
 {
 public:
-    CommandTransformRotate();
+    explicit CommandTransformRotate();
 
     // ICommand interface
 public:
     void Execute() final;
+
+private:
+    void rotate();
 };
 
 #endif // COMMANDTRANSFORMROTATE_H

@@ -7,7 +7,7 @@
 class CommandTransformScale : public CommandTransform
 {
 public:
-    CommandTransformScale();
+    explicit CommandTransformScale();
 
 
     // ICommand interface

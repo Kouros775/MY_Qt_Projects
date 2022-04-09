@@ -7,7 +7,6 @@
 #include <QMatrix4x4>
 
 
-class Camera;
 class RenderModel;
 class QGLShaderProgram;
 
@@ -25,24 +24,17 @@ public:
     ~RenderBase();
 
     void Init();
-    void Paint();
+    void Paint(const QMatrix4x4& viewMatrix, const QMatrix4x4& projMatrix) const;
     void Resize(const int& width, const int& height);
-    bool AddModel(const RenderModel& paramModel, const int& paramIndex);
-    bool SetTransformMatrix(const QMatrix4x4& paramMatrix, const int& paramIndex);
-    bool GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix) const;
-    bool ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4& paramMatrix);
-    bool IsEmptyModelIndex(const int& paramIndex) const;
-
-    void GetViewMatrix(QMatrix4x4& outViewMatrix) const ;
-    void GetProjectionMatrix(QMatrix4x4& outProjectionMatrix) const;
+    bool AddModel(const uint& paramIndex, const RenderModel& paramModel);
+    bool SetTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix);
+    bool GetTransformMatrix(const uint& paramIndex, QMatrix4x4& outMatrix) const;
+    bool ApplyTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix);
+    bool IsEmptyModelIndex(const uint& paramIndex) const;
 
 private:
-    QMap<int, RenderObjectInfo> renderMap;
-
-    QMatrix4x4 projectionMatrix;
-
+    QMap<uint, RenderObjectInfo> renderMap;
     std::shared_ptr<QGLShaderProgram> shaderProgram;
-    std::shared_ptr<Camera> camera;
 };
 
 #endif // RENDERBASE_H

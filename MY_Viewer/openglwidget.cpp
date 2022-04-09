@@ -67,8 +67,15 @@ void OpenGLWidget::mouseReleaseEvent(QMouseEvent *event)
 // Move
 void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    //translate(this->prePoint, event->pos());
-    renderer->Translate(this->prePoint, event->pos(), 1);
+    if(event->buttons() & Qt::MouseButton::LeftButton)
+    {
+        renderer->Translate(this->prePoint, event->pos(), 1);
+    }
+    else if(event->buttons() & Qt::MouseButton::RightButton)
+    {
+        renderer->Rotate(this->prePoint, event->pos(), 1);
+    }
+
     this->prePoint = event->pos();
 
     update();

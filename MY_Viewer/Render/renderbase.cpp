@@ -2,7 +2,6 @@
 #include <QGLShaderProgram>
 #include <QOpenGLFunctions>
 
-#include "Render/camera.h"
 #include "Render/rendermodel.h"
 
 
@@ -15,10 +14,8 @@
 ///
 RenderBase::RenderBase()
     : shaderProgram(nullptr)
-    , camera(nullptr)
 {
     shaderProgram = std::make_shared<QGLShaderProgram>();
-    camera = std::make_shared<Camera>();
 }
 
 
@@ -50,25 +47,24 @@ void RenderBase::Init()
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief RenderBase::Paint
 ///
-void RenderBase::Paint()
+void RenderBase::Paint(const QMatrix4x4& viewMatrix, const QMatrix4x4& projMatrix) const
 {
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
 
      f->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-     QMapIterator<int, RenderObjectInfo> mapIter(renderMap);
+     QMapIterator<uint, RenderObjectInfo> mapIter(renderMap);
      while(mapIter.hasNext())
      {
         mapIter.next();
 
-        QMatrix4x4 viewMatrix = camera->GetViewMatrix();
         QMatrix4x4 transformMatrix = mapIter.value().transformMatrix;
         QVector<QVector3D> vertex = mapIter.value().renderModel->GetVertices();
 
         shaderProgram->bind();
 
         shaderProgram->setUniformValue("viewMatrix", viewMatrix);
-        shaderProgram->setUniformValue("projectionMatrix", projectionMatrix);
+        shaderProgram->setUniformValue("projectionMatrix", projMatrix);
         shaderProgram->setUniformValue("transformMatrix", transformMatrix);
 
         shaderProgram->setUniformValue("color", QColor(Qt::black));
@@ -90,8 +86,6 @@ void RenderBase::Paint()
 ///
 void RenderBase::Resize(const int &width, const int &height)
 {
-    projectionMatrix.setToIdentity();
-    projectionMatrix.perspective(60.0, (float)width / (float)height, 0.001, 1000);
     QOpenGLFunctions *f = QOpenGLContext::currentContext()->functions();
     f->glViewport(0, 0, width, height);
 }
@@ -103,11 +97,11 @@ void RenderBase::Resize(const int &width, const int &height)
 /// \param paramIndex
 /// \return
 ///
-bool RenderBase::AddModel(const RenderModel &paramModel, const int &paramIndex)
+bool RenderBase::AddModel(const uint& paramIndex, const RenderModel& paramModel)
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(paramIndex))
+    if(IsEmptyModelIndex(paramIndex) == true)
     {
         std::shared_ptr<RenderModel> renderModel = std::make_shared<RenderModel>();
         renderModel->DeepCopy(paramModel);
@@ -137,11 +131,11 @@ bool RenderBase::AddModel(const RenderModel &paramModel, const int &paramIndex)
 /// \param paramIndex
 /// \return
 ///
-bool RenderBase::SetTransformMatrix(const QMatrix4x4 &paramMatrix, const int &paramIndex)
+bool RenderBase::SetTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix)
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(paramIndex))
+    if(IsEmptyModelIndex(paramIndex) == false)
     {
         renderMap[paramIndex].transformMatrix = paramMatrix;
         bRes = true;
@@ -161,11 +155,11 @@ bool RenderBase::SetTransformMatrix(const QMatrix4x4 &paramMatrix, const int &pa
 /// \param outMatrix
 /// \return
 ///
-bool RenderBase::GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix) const
+bool RenderBase::GetTransformMatrix(const uint& paramIndex, QMatrix4x4& outMatrix) const
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(paramIndex))
+    if(IsEmptyModelIndex(paramIndex) == false)
     {
         outMatrix = renderMap[paramIndex].transformMatrix;
         bRes = true;
@@ -185,11 +179,11 @@ bool RenderBase::GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix
 /// \param paramMatrix
 /// \return
 ///
-bool RenderBase::ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4& paramMatrix)
+bool RenderBase::ApplyTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix)
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(paramIndex))
+    if(IsEmptyModelIndex(paramIndex) == false)
     {
         renderMap[paramIndex].transformMatrix = paramMatrix * renderMap[paramIndex].transformMatrix;
         bRes = true;
@@ -208,7 +202,7 @@ bool RenderBase::ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4& p
 /// \param paramIndex - modelIndex
 /// \return - true 비었다, false 사용중이다.
 ///
-bool RenderBase::IsEmptyModelIndex(const int &paramIndex) const
+bool RenderBase::IsEmptyModelIndex(const uint &paramIndex) const
 {
     bool bRes = false;
 
@@ -224,24 +218,4 @@ bool RenderBase::IsEmptyModelIndex(const int &paramIndex) const
     }
 
     return bRes;
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief RenderBase::GetViewMatrix
-/// \param outViewMatrix
-///
-void RenderBase::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
-{
-    outViewMatrix = camera->GetViewMatrix();
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief RenderBase::GetProjectionMatrix
-/// \param outProjectionMatrix
-///
-void RenderBase::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
-{
-    outProjectionMatrix = projectionMatrix;
 }

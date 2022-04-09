@@ -15,12 +15,15 @@ Renderer::Renderer()
     , commandTranslate(nullptr)
     , commandRotate(nullptr)
     , commandScale(nullptr)
+    , camera(nullptr)
 {
     renderBase = std::make_shared<RenderBase>();
 
     commandScale = std::make_shared<CommandTransformScale>();
     commandRotate = std::make_shared<CommandTransformRotate>();
     commandTranslate = std::make_shared<CommandTransformTranslate>();
+
+    camera = std::make_shared<Camera>();
 }
 
 
@@ -47,7 +50,7 @@ void Renderer::Init()
 ///
 void Renderer::Paint()
 {
-    renderBase->Paint();
+    renderBase->Paint(camera->GetViewMatrix(), projectionMatrix);
 }
 
 
@@ -58,6 +61,9 @@ void Renderer::Paint()
 ///
 void Renderer::Resize(const int &width, const int &height)
 {
+    projectionMatrix.setToIdentity();
+    projectionMatrix.perspective(60.0, (float)width / (float)height, 0.001f, 1000.0f);
+
     renderBase->Resize(width, height);
 }
 
@@ -68,9 +74,9 @@ void Renderer::Resize(const int &width, const int &height)
 /// \param paramModel
 /// \return
 ///
-bool Renderer::AddModel(const int& paramIndex, const RenderModel& paramModel)
+bool Renderer::AddModel(const uint& paramIndex, const RenderModel& paramModel)
 {
-    return renderBase->AddModel(paramModel, paramIndex);
+    return renderBase->AddModel(paramIndex, paramModel);
 }
 
 
@@ -80,9 +86,9 @@ bool Renderer::AddModel(const int& paramIndex, const RenderModel& paramModel)
 /// \param paramMatrix
 /// \return
 ///
-bool Renderer::SetTransformMatrix(const int& paramIndex, const QMatrix4x4& paramMatrix)
+bool Renderer::SetTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix)
 {
-    return renderBase->SetTransformMatrix(paramMatrix, paramIndex);
+    return renderBase->SetTransformMatrix(paramIndex, paramMatrix);
 }
 
 
@@ -92,7 +98,7 @@ bool Renderer::SetTransformMatrix(const int& paramIndex, const QMatrix4x4& param
 /// \param outMatrix
 /// \return
 ///
-bool Renderer::GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix) const
+bool Renderer::GetTransformMatrix(const uint& paramIndex, QMatrix4x4& outMatrix) const
 {
     return renderBase->GetTransformMatrix(paramIndex, outMatrix);
 }
@@ -104,7 +110,7 @@ bool Renderer::GetTransformMatrix(const int& paramIndex, QMatrix4x4& outMatrix) 
 /// \param paramMatrix
 /// \return
 ///
-bool Renderer::ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4 &paramMatrix)
+bool Renderer::ApplyTransformMatrix(const uint& paramIndex, const QMatrix4x4 &paramMatrix)
 {
     return renderBase->ApplyTransformMatrix(paramIndex, paramMatrix);
 }
@@ -115,29 +121,9 @@ bool Renderer::ApplyTransformMatrix(const int& paramIndex, const QMatrix4x4 &par
 /// \param paramIndex
 /// \return
 ///
-bool Renderer::IsEmptyModelIndex(const int &paramIndex) const
+bool Renderer::IsEmptyModelIndex(const uint &paramIndex) const
 {
     return renderBase->IsEmptyModelIndex(paramIndex);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief Renderer::GetViewMatrix
-/// \param outViewMatrix
-///
-void Renderer::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
-{
-    renderBase->GetViewMatrix(outViewMatrix);
-}
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief Renderer::GetProjectionMatrix
-/// \param outProjectionMatrix
-///
-void Renderer::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
-{
-    renderBase->GetProjectionMatrix(outProjectionMatrix);
 }
 
 
@@ -148,11 +134,11 @@ void Renderer::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
 /// \param index - 적용하고자 하는 Model index
 /// \return - 성공했는지 여부
 ///
-bool Renderer::Translate(const QPoint &startPoint, const QPoint &endPoint, const int &index)
+bool Renderer::Translate(const QPoint &startPoint, const QPoint &endPoint, const uint &index)
 {
     bool bRes = false;
 
-    if(!IsEmptyModelIndex(index))
+    if(IsEmptyModelIndex(index) == false)
     {
         commandTranslate->SetStartPoint(startPoint);
         commandTranslate->SetEndPoint(endPoint);
@@ -186,11 +172,11 @@ bool Renderer::Translate(const QPoint &startPoint, const QPoint &endPoint, const
 /// \param index
 /// \return
 ///
-bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const int &index)
+bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const uint &index)
 {
     bool bRes = false;
 
-    if(!IsEmptyModelIndex(index))
+    if(IsEmptyModelIndex(index) == false)
     {
         commandRotate->SetStartPoint(startPoint);
         commandRotate->SetEndPoint(endPoint);
@@ -224,11 +210,11 @@ bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const in
 /// \param index
 /// \return
 ///
-bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const int &index)
+bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const uint &index)
 {
     bool bRes = false;
 
-    if(!IsEmptyModelIndex(index))
+    if(IsEmptyModelIndex(index) == false)
     {
         commandScale->SetStartPoint(startPoint);
         commandScale->SetEndPoint(endPoint);
@@ -255,4 +241,22 @@ bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const int
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief RenderBase::GetViewMatrix
+/// \param outViewMatrix
+///
+void Renderer::GetViewMatrix(QMatrix4x4 &outViewMatrix) const
+{
+    outViewMatrix = camera->GetViewMatrix();
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief RenderBase::GetProjectionMatrix
+/// \param outProjectionMatrix
+///
+void Renderer::GetProjectionMatrix(QMatrix4x4 &outProjectionMatrix) const
+{
+    outProjectionMatrix = projectionMatrix;
+}
 
