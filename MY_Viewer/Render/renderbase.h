@@ -31,6 +31,7 @@ public:
     bool GetTransformMatrix(const uint& paramIndex, QMatrix4x4& outMatrix) const;
     bool ApplyTransformMatrix(const uint& paramIndex, const QMatrix4x4& paramMatrix);
     bool IsEmptyModelIndex(const uint& paramIndex) const;
+    bool RayPicking(const QPoint& point, uint& outPickedIndex) const;
 
 private:
     QMap<uint, RenderObjectInfo> renderMap;

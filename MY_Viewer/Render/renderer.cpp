@@ -176,7 +176,7 @@ bool Renderer::Rotate(const QPoint &startPoint, const QPoint &endPoint, const ui
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(index) == false)
+    if(false == IsEmptyModelIndex(index))
     {
         commandRotate->SetStartPoint(startPoint);
         commandRotate->SetEndPoint(endPoint);
@@ -214,7 +214,7 @@ bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const uin
 {
     bool bRes = false;
 
-    if(IsEmptyModelIndex(index) == false)
+    if(false == IsEmptyModelIndex(index))
     {
         commandScale->SetStartPoint(startPoint);
         commandScale->SetEndPoint(endPoint);
@@ -238,6 +238,18 @@ bool Renderer::Scale(const QPoint &startPoint, const QPoint &endPoint, const uin
     }
 
     return bRes;
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::RayPicking
+/// \param point
+/// \param outPickedIndex
+/// \return
+///
+bool Renderer::RayPicking(const QPoint &point, uint &outPickedIndex) const
+{
+    return renderBase->RayPicking(point, outPickedIndex);
 }
 
 

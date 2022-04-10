@@ -9,6 +9,8 @@
 OpenGLWidget::OpenGLWidget(QWidget *parent)
     : QOpenGLWidget(parent)
     , renderer(nullptr)
+    , selectedModelIndex(1)
+    , modelCount(0)
 {
     renderer = std::make_shared<Renderer>();
 
@@ -30,6 +32,7 @@ QSize OpenGLWidget::sizeHint() const
 
 void OpenGLWidget::paintGL()
 {
+    qDebug(__FUNCTION__);
     renderer->Paint();
 }
 
@@ -47,6 +50,23 @@ void OpenGLWidget::resizeGL(int width, int height)
 void OpenGLWidget::initializeGL()
 {
     renderer->Init();
+}
+
+bool OpenGLWidget::AddModel(const RenderModel &paramModel)
+{
+    bool bRes = false;
+
+    if(true == renderer->AddModel(modelCount, paramModel))
+    {
+        bRes = true;
+        modelCount++;
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return bRes;
 }
 
 
@@ -70,13 +90,14 @@ void OpenGLWidget::mouseMoveEvent(QMouseEvent *event)
     if(event->buttons() & Qt::MouseButton::LeftButton)
     {
         renderer->Translate(this->prePoint, event->pos(), 1);
+        update();
     }
     else if(event->buttons() & Qt::MouseButton::RightButton)
     {
         renderer->Rotate(this->prePoint, event->pos(), 1);
+        update();
     }
 
     this->prePoint = event->pos();
-
-    update();
 }
+

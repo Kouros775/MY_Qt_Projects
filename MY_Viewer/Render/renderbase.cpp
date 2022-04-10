@@ -219,3 +219,27 @@ bool RenderBase::IsEmptyModelIndex(const uint &paramIndex) const
 
     return bRes;
 }
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief RenderBase::RayPicking
+/// \param point
+/// \param outPickedIndex
+/// \return
+///
+bool RenderBase::RayPicking(const QPoint &point, uint &outPickedIndex) const
+{
+    bool bRes = false;
+
+    QMapIterator<uint, RenderObjectInfo> mapIter(renderMap);
+    while(mapIter.hasNext())
+    {
+        mapIter.next();
+
+        QMatrix4x4 transformMatrix = mapIter.value().transformMatrix;
+        QVector<QVector3D> vertex = mapIter.value().renderModel->GetVertices();
+    }
+
+
+    return bRes;
+}

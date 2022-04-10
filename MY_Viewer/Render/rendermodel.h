@@ -1,9 +1,9 @@
 #ifndef RENDERMODEL_H
 #define RENDERMODEL_H
 
-#include <QVector3D>
+#include <QString>
 #include <QVector>
-
+#include <QVector3D>
 
 class RenderModel
 {
@@ -12,9 +12,16 @@ public:
     ~RenderModel();
 
     void DeepCopy(const RenderModel& paramModel);
+
+    void SetName(const QString& paramName) {name = paramName;}
+    QString GetName() const {return name;}
+
     QVector<QVector3D> GetVertices() const {return vertices;}
 
+
+    void TempFunction();
 private:
+    QString name;
     QVector<QVector3D> vertices;
 };
 

@@ -8,7 +8,7 @@
 
 
 class Renderer;
-
+class RenderModel;
 
 class OpenGLWidget : public QOpenGLWidget
 {
@@ -29,7 +29,8 @@ public:
     // openGL 렌더링 context를 설정한다. 위의 함수가 호출되기 전 초기화를 위해 호출된다.
     void initializeGL() override;
 
-
+public slots:
+    bool AddModel(const RenderModel& paramModel);
 
     // QWidget interface
 protected:
@@ -41,6 +42,9 @@ protected:
 private:
     QPoint prePoint;
     std::shared_ptr<Renderer> renderer;
+    uint selectedModelIndex;
+
+    uint modelCount;
 };
 
 #endif // OPENGLWIDGET_H

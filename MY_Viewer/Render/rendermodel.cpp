@@ -37,3 +37,13 @@ void RenderModel::DeepCopy(const RenderModel &paramModel)
 {
     vertices = paramModel.GetVertices();
 }
+
+void RenderModel::TempFunction()
+{
+    /////////////////
+    // >> 앞
+    vertices.clear();
+
+    vertices << QVector3D(1+3, -1+3, -1+3) << QVector3D(1+3, 1+3, -1+3) << QVector3D(-1+3, 1+3, -1+3);
+    vertices << QVector3D(-1+3, 1+3, -1+3) << QVector3D(-1+3, -1+3, -1+3) << QVector3D(1+3, -1+3, -1+3);
+}

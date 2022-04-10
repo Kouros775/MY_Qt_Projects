@@ -36,6 +36,8 @@ public:
     bool Translate(const QPoint& startPoint, const QPoint& endPoint, const uint& index);
     bool Rotate(const QPoint& startPoint, const QPoint& endPoint, const uint& index);
     bool Scale(const QPoint& startPoint, const QPoint& endPoint, const uint& index);
+    bool RayPicking(const QPoint& point, uint& outPickedIndex) const;
+
 private:
     std::shared_ptr<RenderBase> renderBase;
 
