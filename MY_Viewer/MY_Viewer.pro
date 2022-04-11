@@ -28,7 +28,8 @@ SOURCES += \
     Render/renderer.cpp \
     Loader/modelloader.cpp \
     Widget/renderwidget.cpp \
-    Render/rendercamera.cpp
+    Render/rendercamera.cpp \
+    Widget/renderwindow.cpp
 
 HEADERS += \
     Render/renderbase.h \
@@ -47,7 +48,8 @@ HEADERS += \
     Render/renderer.h \
     Loader/modelloader.h \
     Widget/renderwidget.h \
-    Render/rendercamera.h
+    Render/rendercamera.h \
+    Widget/renderwindow.h
 
 FORMS +=
 
