@@ -5,7 +5,7 @@
 
 
 #include "openglwidget.h"
-
+#include "Widget/renderwidget.h"
 
 MDIMainWindow::MDIMainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,6 +16,11 @@ MDIMainWindow::MDIMainWindow(QWidget *parent)
 
     QMdiArea* area = new QMdiArea();
     area->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    area->addSubWindow(myOpenGLWidget);
+    //area->addSubWindow(myOpenGLWidget);
+
+    RenderWidget* renderWidget = new RenderWidget();
+
+    area->addSubWindow(renderWidget);
+
     setCentralWidget(area);
 }

@@ -1,4 +1,5 @@
-QT       += core gui opengl 3drender
+QT       += core gui opengl
+QT       += 3dcore 3drender 3dinput 3dextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,7 +26,9 @@ SOURCES += \
     Command/Transform/commandtransformscale.cpp \
     Render/camera.cpp \
     Render/renderer.cpp \
-    Loader/modelloader.cpp
+    Loader/modelloader.cpp \
+    Widget/renderwidget.cpp \
+    Render/rendercamera.cpp
 
 HEADERS += \
     Render/renderbase.h \
@@ -42,7 +45,9 @@ HEADERS += \
     Command/Transform/commandtransformscale.h \
     Render/camera.h \
     Render/renderer.h \
-    Loader/modelloader.h
+    Loader/modelloader.h \
+    Widget/renderwidget.h \
+    Render/rendercamera.h
 
 FORMS +=
 
