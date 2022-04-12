@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     addButtons();
 
-    QDockWidget* dock = new QDockWidget(tr("Target"), this);
+    QDockWidget* dock = new QDockWidget(tr("Model List"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
     listWidget = new QListWidget(dock);
@@ -92,10 +92,12 @@ void MainWindow::loadModel()
 
     QUrl urlPath = QUrl::fromLocalFile(path);
 
-    loadMesh->setMeshName(path);
+    QString meshName = path.section("/", -1);
+
+    loadMesh->setMeshName(meshName);
     loadMesh->setSource(urlPath);
 
-    listWidget->addItems(QStringList() << loadMesh->meshName());
+    listWidget->addItems(QStringList() << meshName);
 
     mdiMainWindow->AddModel(loadMesh);
 }

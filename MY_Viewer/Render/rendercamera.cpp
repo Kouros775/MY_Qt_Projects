@@ -6,7 +6,7 @@
 
 RenderCamera::RenderCamera(QObject *parent)
     : QObject(parent)
-    , camPos(0.0f, 0.0f, 40.0f)
+    , camPos(0.0f, 0.0f, 100.0f)
     , camUpVector(0.0f, 1.0f, 0.0f)
     , camLookAt(0.0f, 0.0f, 0.0f)
     , camera(nullptr)
@@ -23,7 +23,7 @@ void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntit
     {
         camera = paramCamera;
 
-        camera->lens()->setPerspectiveProjection(45.0f, 2.0f, 0.1f, 2000.0f);
+        camera->lens()->setPerspectiveProjection(60.0f, 2.0f, 0.1f, 2000.0f);
 
 
         // For camera controls
