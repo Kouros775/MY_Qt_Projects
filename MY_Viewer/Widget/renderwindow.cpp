@@ -59,8 +59,12 @@ void RenderWindow::createRootEntry()
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
+    if(torusEntity != nullptr)
+    {
+        delete torusEntity;
+        torusEntity = nullptr;
+    }
     qDebug(__FUNCTION__);
-    delete torusEntity;
 }
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
