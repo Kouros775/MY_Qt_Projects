@@ -58,12 +58,7 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 
 
     Qt3DCore::QTransform* transform = new Qt3DCore::QTransform();
-    transform->setScale3D(QVector3D(1.5, 1, 0.5));
-    transform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 45.0f));
-
-    // Material
     Qt3DRender::QMaterial* material = new Qt3DExtras::QPhongMaterial();
-
 
     renderModelInfo->material = material;
     renderModelInfo->transform = transform;

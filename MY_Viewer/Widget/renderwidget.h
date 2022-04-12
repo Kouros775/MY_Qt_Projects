@@ -6,6 +6,10 @@
 
 
 class RenderWindow;
+namespace Qt3DRender
+{
+    class QMesh;
+}
 
 
 class RenderWidget : public QWidget
@@ -18,7 +22,7 @@ public:
 
     QSize sizeHint() const override;
 
-
+    void AddModel(Qt3DRender::QMesh* paramMesh);
 private:
     RenderWindow* renderWindow;
 };

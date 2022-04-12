@@ -23,7 +23,6 @@ bool RenderBase::AddModel(const int &paramIndex, const RenderModelInfo *paramMod
 
     if(true == IsEmptyIndex(paramIndex))
     {
-        // Torus
         Qt3DCore::QEntity* modelEntity = new Qt3DCore::QEntity(rootEntity);
 
         modelEntity->addComponent(paramModel->mesh);

@@ -7,6 +7,7 @@
 
 MDIMainWindow::MDIMainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , renderWidget(nullptr)
 {
     setWindowTitle(QString::fromUtf8("MY MDI"));
 
@@ -15,16 +16,16 @@ MDIMainWindow::MDIMainWindow(QWidget *parent)
     area->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 
-    renderWidget = std::make_shared<RenderWidget>();
+    renderWidget = new RenderWidget();
 
 
-    area->addSubWindow(renderWidget.get());
+    area->addSubWindow(renderWidget);
 
     setCentralWidget(area);
 }
 
 
-void MDIMainWindow::AddModel(const RenderModel *paramModel)
+void MDIMainWindow::AddModel(Qt3DRender::QMesh* paramMesh)
 {
-
+    renderWidget->AddModel(paramMesh);
 }

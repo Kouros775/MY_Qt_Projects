@@ -96,4 +96,6 @@ void MainWindow::loadModel()
     loadMesh->setSource(urlPath);
 
     listWidget->addItems(QStringList() << loadMesh->meshName());
+
+    mdiMainWindow->AddModel(loadMesh);
 }

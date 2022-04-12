@@ -4,12 +4,14 @@
 #include <Qt3DExtras/Qt3DWindow>
 #include <memory>
 
+
+class Renderer;
 namespace Qt3DRender
 {
     class QMesh;
 }
 
-class Renderer;
+
 
 class RenderWindow : public Qt3DExtras::Qt3DWindow
 {
@@ -18,10 +20,8 @@ public:
     ~RenderWindow() override;
 
     void Initialize();
-    void createRootEntry();
+    void AddModel(Qt3DRender::QMesh* paramMesh);
 
-public slots:
-    void AddModel(const Qt3DRender::QMesh* paramMesh);
 
     // QWindow interface
 protected:

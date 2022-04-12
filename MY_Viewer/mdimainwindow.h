@@ -2,11 +2,13 @@
 #define MDIMAINWINDOW_H
 
 #include <QMainWindow>
-#include <memory>
 
-class RenderModel;
+
 class RenderWidget;
-
+namespace Qt3DRender
+{
+    class QMesh;
+}
 
 class MDIMainWindow : public QMainWindow
 {
@@ -14,13 +16,10 @@ class MDIMainWindow : public QMainWindow
 public:
     explicit MDIMainWindow(QWidget *parent = nullptr);
 
-signals:
-
-public slots:
-    void AddModel(const RenderModel* paramModel);
+    void AddModel(Qt3DRender::QMesh* paramMesh);
 
 private:
-    std::shared_ptr<RenderWidget> renderWidget;
+    RenderWidget* renderWidget;
 };
 
 #endif // MDIMAINWINDOW_H

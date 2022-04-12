@@ -30,3 +30,8 @@ QSize RenderWidget::sizeHint() const
 {
     return QSize(1024,800);
 }
+
+void RenderWidget::AddModel(Qt3DRender::QMesh *paramMesh)
+{
+    renderWindow->AddModel(paramMesh);
+}

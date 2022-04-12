@@ -26,6 +26,13 @@ void RenderWindow::Initialize()
     setRootEntity(rootEntity);
 }
 
+void RenderWindow::AddModel(Qt3DRender::QMesh *paramMesh)
+{
+    static int index = 1;
+    renderer->AddModel(index, paramMesh);
+    index++;
+}
+
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
