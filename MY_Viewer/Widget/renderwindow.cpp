@@ -16,8 +16,8 @@ RenderWindow::RenderWindow(QScreen *screen)
 
 RenderWindow::~RenderWindow()
 {
-
 }
+
 
 void RenderWindow::Initialize()
 {
@@ -26,11 +26,10 @@ void RenderWindow::Initialize()
     setRootEntity(rootEntity);
 }
 
-void RenderWindow::AddModel(Qt3DRender::QMesh *paramMesh)
+
+void RenderWindow::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
-    static int index = 1;
-    renderer->AddModel(index, paramMesh);
-    index++;
+    renderer->AddModel(paramIndex, paramMesh);
 }
 
 

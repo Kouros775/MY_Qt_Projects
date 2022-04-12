@@ -20,7 +20,7 @@ public:
     ~RenderWindow() override;
 
     void Initialize();
-    void AddModel(Qt3DRender::QMesh* paramMesh);
+    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
 
 
     // QWindow interface

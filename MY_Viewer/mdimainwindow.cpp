@@ -25,7 +25,7 @@ MDIMainWindow::MDIMainWindow(QWidget *parent)
 }
 
 
-void MDIMainWindow::AddModel(Qt3DRender::QMesh* paramMesh)
+void MDIMainWindow::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
-    renderWidget->AddModel(paramMesh);
+    renderWidget->AddModel(paramIndex, paramMesh);
 }

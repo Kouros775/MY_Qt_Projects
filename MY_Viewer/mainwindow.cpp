@@ -10,10 +10,9 @@
 #include <mdimainwindow.h>
 #include <QApplication>
 #include <QFileDialog>
-
-
-
 #include <Qt3DRender>
+
+#include "Document/modeldocument.h"
 
 
 #define IMAGE_PATH_NEW_ACTION ":/images/new.png"
@@ -86,7 +85,10 @@ void MainWindow::_newFile()
 
 void MainWindow::loadModel()
 {
-    QString path = QFileDialog::getOpenFileName(nullptr, "파일 선택", "C:\\", "Files(*.*)");
+    QString path = QFileDialog::getOpenFileName(nullptr
+                                                , "파일 선택"
+                                                , QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)
+                                                , "Files(*.*)");
 
     Qt3DRender::QMesh* loadMesh = new Qt3DRender::QMesh;
 
@@ -97,7 +99,12 @@ void MainWindow::loadModel()
     loadMesh->setMeshName(meshName);
     loadMesh->setSource(urlPath);
 
-    listWidget->addItems(QStringList() << meshName);
+    ModelDocument& modelDocument = ModelDocument::Instance();
+    int index = modelDocument.AddModel(loadMesh);
 
-    mdiMainWindow->AddModel(loadMesh);
+    QString name = QString::number(index) + " : " + meshName;
+
+    listWidget->addItems(QStringList() << name);
+
+    mdiMainWindow->AddModel(index, loadMesh);
 }

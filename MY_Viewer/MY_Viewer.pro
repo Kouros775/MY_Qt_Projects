@@ -23,7 +23,8 @@ SOURCES += \
     Command/Transform/commandtransformscale.cpp \
     Widget/renderwidget.cpp \
     Render/rendercamera.cpp \
-    Widget/renderwindow.cpp
+    Widget/renderwindow.cpp \
+    Document/modeldocument.cpp
 
 HEADERS += \
     Render/renderbase.h \
@@ -37,7 +38,8 @@ HEADERS += \
     Command/Transform/commandtransformscale.h \
     Widget/renderwidget.h \
     Render/rendercamera.h \
-    Widget/renderwindow.h
+    Widget/renderwindow.h \
+    Document/modeldocument.h
 
 
 # Default rules for deployment.

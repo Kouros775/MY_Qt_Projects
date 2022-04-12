@@ -16,7 +16,7 @@ class MDIMainWindow : public QMainWindow
 public:
     explicit MDIMainWindow(QWidget *parent = nullptr);
 
-    void AddModel(Qt3DRender::QMesh* paramMesh);
+    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
 
 private:
     RenderWidget* renderWidget;
