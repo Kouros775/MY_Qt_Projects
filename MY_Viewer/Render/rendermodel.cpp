@@ -1,31 +1,10 @@
 #include "rendermodel.h"
+#include <Qt3DRender>
+#include <Qt3DExtras>
+
 
 RenderModel::RenderModel()
 {
-    /////////////////
-    // >> 앞
-    vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-    vertices << QVector3D(-1, 1, -1) << QVector3D(-1, -1, -1) << QVector3D(1, -1, -1);
-
-    // 뒤
-    vertices << QVector3D(1, -1, 1) << QVector3D(1, 1, 1) << QVector3D(-1, 1, 1);
-    vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
-
-    // 오른쪽
-    vertices << QVector3D(1, -1, -1) << QVector3D(1, 1, -1) << QVector3D(1, 1, 1);
-    vertices << QVector3D(1, 1, 1) << QVector3D(1, -1, -1) << QVector3D(1, -1, -1);
-
-    // 왼쪽
-    vertices << QVector3D(-1, -1, -1) << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1);
-    vertices << QVector3D(-1, 1, 1) << QVector3D(-1, -1, -1) << QVector3D(-1, -1, -1);
-
-    // 위
-    vertices << QVector3D(1, 1, 1) << QVector3D(1, 1, -1) << QVector3D(-1, 1, -1);
-    vertices << QVector3D(-1, 1, -1) << QVector3D(-1, 1, 1) << QVector3D(1, 1, 1);
-
-    // 아래
-    vertices << QVector3D(1, -1, 1) << QVector3D(1, -1, -1) << QVector3D(-1, -1, -1);
-    vertices << QVector3D(-1, -1, -1) << QVector3D(-1, -1, 1) << QVector3D(1, -1, 1);
 }
 
 RenderModel::~RenderModel()
@@ -33,17 +12,14 @@ RenderModel::~RenderModel()
 
 }
 
-void RenderModel::DeepCopy(const RenderModel &paramModel)
-{
-    vertices = paramModel.GetVertices();
-}
 
-void RenderModel::TempFunction()
+void RenderModel::MakeTorus(const float &paramRadius, const float &paramMinorRadius, const int &paramRing, const int &paramSlice)
 {
-    /////////////////
-    // >> 앞
-    vertices.clear();
+    mesh = std::make_shared<Qt3DExtras::QTorusMesh>();
 
-    vertices << QVector3D(1+3, -1+3, -1+3) << QVector3D(1+3, 1+3, -1+3) << QVector3D(-1+3, 1+3, -1+3);
-    vertices << QVector3D(-1+3, 1+3, -1+3) << QVector3D(-1+3, -1+3, -1+3) << QVector3D(1+3, -1+3, -1+3);
+    Qt3DExtras::QTorusMesh* torusMesh = dynamic_cast<Qt3DExtras::QTorusMesh*>(mesh.get());
+    torusMesh->setRadius(5);
+    torusMesh->setMinorRadius(1);
+    torusMesh->setRings(100);
+    torusMesh->setSlices(20);
 }
