@@ -11,6 +11,7 @@ CONFIG += c++11
 LIBS += -lopengl32
 
 SOURCES += \
+    Command/commandmodelload.cpp \
     Render/renderbase.cpp \
     Render/renderer.cpp \
     Render/rendermodel.cpp \
@@ -18,7 +19,6 @@ SOURCES += \
         mainwindow.cpp \
         mdimainwindow.cpp \
     Command/icommand.cpp \
-    Command/commandopenfile.cpp \
     Command/commandnewscene.cpp \
     Command/Transform/commandtransformtranslate.cpp \
     Command/Transform/commandtransform.cpp \
@@ -30,13 +30,13 @@ SOURCES += \
     Widget/renderwindow.cpp
 
 HEADERS += \
+    Command/commandmodelload.h \
     Render/renderbase.h \
     Render/renderer.h \
     Render/rendermodel.h \
         mainwindow.h \
         mdimainwindow.h \
     Command/icommand.h \
-    Command/commandopenfile.h \
     Command/commandnewscene.h \
     Command/Transform/commandtransformtranslate.h \
     Command/Transform/commandtransform.h \

@@ -3,13 +3,14 @@
 
 #include <QString>
 
+class RenderModel;
 
 class ModelLoader
 {
 public:
     ModelLoader();
 
-    static bool LoadModel(const QString path);
+    static bool LoadModel(const QString& path, RenderModel* outRenderModel);
 };
 
 #endif // MODELLOADER_H

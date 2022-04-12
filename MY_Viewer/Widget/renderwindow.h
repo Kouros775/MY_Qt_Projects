@@ -6,6 +6,7 @@
 
 
 class Renderer;
+class RenderModel;
 
 
 class RenderWindow : public Qt3DExtras::Qt3DWindow
@@ -16,6 +17,9 @@ public:
 
     void Initialize();
     void createRootEntry();
+
+public slots:
+    void AddModel(const RenderModel& paramModel);
 
     // QWindow interface
 protected:

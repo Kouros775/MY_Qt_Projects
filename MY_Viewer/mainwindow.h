@@ -24,8 +24,6 @@ private slots:
     void _open();
 
 private:
-    ICommand* commandOpenFile;
-    ICommand* commandNewScene;
 };
 
 #endif // MAINWINDOW_H

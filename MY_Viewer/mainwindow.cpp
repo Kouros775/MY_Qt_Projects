@@ -11,8 +11,6 @@
 #include <QApplication>
 
 
-#include "Command/commandopenfile.h"
-#include "Command/commandnewscene.h"
 
 
 #define IMAGE_PATH_NEW_ACTION ":/images/new.png"
@@ -21,8 +19,6 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , commandOpenFile(nullptr)
-    , commandNewScene(nullptr)
 {
     _addButtonAction();
 
@@ -40,8 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     statusBar()->showMessage(tr("Ready"));
 
     // >> Command
-    commandOpenFile = new CommandOpenFile();
-    commandNewScene = new CommandNewScene();
+    //commandOpenFile = new CommandOpenFile();
+    //commandNewScene = new CommandNewScene();
     // << Command
 }
 
@@ -79,12 +75,12 @@ void MainWindow::_addButtonAction()
     fileToolBar->addAction(openAct);
 }
 
+
 void MainWindow::_newFile()
 {
-    commandNewScene->Execute();
 }
+
 
 void MainWindow::_open()
 {
-    commandOpenFile->Execute();
 }

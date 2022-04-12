@@ -13,6 +13,8 @@
 ///
 Renderer::Renderer(QObject *parent)
     : QObject(parent)
+    , renderBase(nullptr)
+    , camera(nullptr)
 {
     renderBase = std::make_shared<RenderBase>();
     camera = std::make_shared<RenderCamera>();

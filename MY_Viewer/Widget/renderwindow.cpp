@@ -13,10 +13,10 @@ RenderWindow::RenderWindow(QScreen *screen)
 
     Initialize();
 
-    //RenderModel* temp = new RenderModel();
-    //temp->MakeTorus(1.0f, 5.0f, 10,20);
-    //
-    //renderer->AddModel(1, *temp);
+    RenderModel* temp = new RenderModel();
+    temp->MakeTorus(1.0f, 5.0f, 10,20);
+
+    renderer->AddModel(1, *temp);
 }
 
 
@@ -27,7 +27,7 @@ RenderWindow::~RenderWindow()
 
 void RenderWindow::Initialize()
 {
-    renderer = std::shared_ptr<Renderer>();
+    renderer = std::make_shared<Renderer>();
     std::shared_ptr<Qt3DCore::QEntity> rootEntity = renderer->Initialize(this->camera());
     setRootEntity(rootEntity.get());
 }

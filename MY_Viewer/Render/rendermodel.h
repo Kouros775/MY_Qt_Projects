@@ -20,6 +20,7 @@ public:
     void SetName(const QString& paramName) {name = paramName;}
     QString GetName() const {return name;}
 
+    void SetMesh(std::shared_ptr<Qt3DRender::QGeometryRenderer> paramMesh){this->mesh = paramMesh;}
     std::shared_ptr<Qt3DRender::QGeometryRenderer> GetMesh() const {return mesh;}
 
     void MakeTorus(const float& paramRadius, const float& paramMinorRadius, const int& paramRing, const int& paramSlice);
