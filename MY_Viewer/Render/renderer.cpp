@@ -2,7 +2,6 @@
 #include <Qt3DRender>
 #include <Qt3DExtras>
 
-#include "Render/rendermodel.h"
 #include "Render/renderbase.h"
 #include "Render/rendercamera.h"
 
@@ -13,11 +12,11 @@
 ///
 Renderer::Renderer(QObject *parent)
     : QObject(parent)
-    , renderBase(nullptr)
     , camera(nullptr)
+    , renderBase(nullptr)
 {
-    renderBase = std::make_shared<RenderBase>();
-    camera = std::make_shared<RenderCamera>();
+    renderBase = new RenderBase();
+    camera = new RenderCamera();
 }
 
 
@@ -34,11 +33,11 @@ Renderer::~Renderer()
 /// \brief Renderer::Initialize
 /// \return
 ///
-std::shared_ptr<Qt3DCore::QEntity> Renderer::Initialize(Qt3DRender::QCamera* paramCamera)
+Qt3DCore::QEntity* Renderer::Initialize(Qt3DRender::QCamera* paramCamera)
 {
-    std::shared_ptr<Qt3DCore::QEntity> rootEntity = renderBase->Initialize();
+    Qt3DCore::QEntity* rootEntity = renderBase->Initialize();
 
-    camera  = std::make_shared<RenderCamera>();
+    camera  = new RenderCamera();
     camera->Initialize(paramCamera, rootEntity);
 
     return rootEntity;
@@ -48,26 +47,27 @@ std::shared_ptr<Qt3DCore::QEntity> Renderer::Initialize(Qt3DRender::QCamera* par
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief Renderer::AddModel
 /// \param paramIndex
-/// \param paramModel
+/// \param paramMesh
 /// \return
 ///
-bool Renderer::AddModel(const int &paramIndex, const RenderModel &paramModel)
+bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
     bool bRes = false;
 
     RenderModelInfo* renderModelInfo = new RenderModelInfo();
 
 
-    std::shared_ptr<Qt3DCore::QTransform> transform = std::make_shared<Qt3DCore::QTransform>();
+    Qt3DCore::QTransform* transform = new Qt3DCore::QTransform();
     transform->setScale3D(QVector3D(1.5, 1, 0.5));
     transform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 45.0f));
 
     // Material
-    std::shared_ptr<Qt3DRender::QMaterial> material = std::make_shared<Qt3DExtras::QPhongMaterial>();
+    Qt3DRender::QMaterial* material = new Qt3DExtras::QPhongMaterial();
+
 
     renderModelInfo->material = material;
     renderModelInfo->transform = transform;
-    renderModelInfo->mesh = paramModel.GetMesh();
+    renderModelInfo->mesh = paramMesh;
 
     bRes = renderBase->AddModel(paramIndex, renderModelInfo);
 

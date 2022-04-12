@@ -9,8 +9,11 @@
 #include <QDockWidget>
 #include <mdimainwindow.h>
 #include <QApplication>
+#include <QFileDialog>
 
 
+
+#include <Qt3DRender>
 
 
 #define IMAGE_PATH_NEW_ACTION ":/images/new.png"
@@ -19,26 +22,24 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
+    , mdiMainWindow(nullptr)
 {
-    _addButtonAction();
+    addButtons();
 
     QDockWidget* dock = new QDockWidget(tr("Target"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-    QListWidget* customerList = new QListWidget(dock);
-    customerList->addItems(QStringList() << "One" << "Two" << "Three" << "Four" << "Five");
+    listWidget = new QListWidget(dock);
 
-    dock->setWidget(customerList);
+    dock->setWidget(listWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 
-    setCentralWidget(new MDIMainWindow());
+
+    mdiMainWindow = new MDIMainWindow();
+
+    setCentralWidget(mdiMainWindow);
 
     statusBar()->showMessage(tr("Ready"));
-
-    // >> Command
-    //commandOpenFile = new CommandOpenFile();
-    //commandNewScene = new CommandNewScene();
-    // << Command
 }
 
 MainWindow::~MainWindow()
@@ -46,7 +47,7 @@ MainWindow::~MainWindow()
 
 }
 
-void MainWindow::_addButtonAction()
+void MainWindow::addButtons()
 {
     QMenu* fileMenu;
     fileMenu = menuBar()->addMenu(tr("&File"));
@@ -63,8 +64,10 @@ void MainWindow::_addButtonAction()
     QAction* openAct;
     openAct = new QAction(QIcon(IMAGE_PATH_OPEN_ACTION), tr("Open"), this);
     openAct->setShortcuts(QKeySequence::Open);
-    openAct->setStatusTip(tr("Open an existing file."));
-    connect(openAct, &QAction::triggered, this, &MainWindow::_open);
+    openAct->setStatusTip(tr("Load Model File."));
+    connect(openAct, &QAction::triggered, this, &MainWindow::loadModel);
+
+
     fileMenu->addAction(openAct);
 
 
@@ -81,6 +84,16 @@ void MainWindow::_newFile()
 }
 
 
-void MainWindow::_open()
+void MainWindow::loadModel()
 {
+    QString path = QFileDialog::getOpenFileName(nullptr, "파일 선택", "C:\\", "Files(*.*)");
+
+    Qt3DRender::QMesh* loadMesh = new Qt3DRender::QMesh;
+
+    QUrl urlPath = QUrl::fromLocalFile(path);
+
+    loadMesh->setMeshName(path);
+    loadMesh->setSource(urlPath);
+
+    listWidget->addItems(QStringList() << loadMesh->meshName());
 }

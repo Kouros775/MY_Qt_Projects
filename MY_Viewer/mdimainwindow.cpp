@@ -14,8 +14,17 @@ MDIMainWindow::MDIMainWindow(QWidget *parent)
     QMdiArea* area = new QMdiArea();
     area->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
-    RenderWidget* renderWidget = new RenderWidget();
-    area->addSubWindow(renderWidget);
+
+    renderWidget = std::make_shared<RenderWidget>();
+
+
+    area->addSubWindow(renderWidget.get());
 
     setCentralWidget(area);
+}
+
+
+void MDIMainWindow::AddModel(const RenderModel *paramModel)
+{
+
 }

@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QVector3D>
-#include <memory>
 
 
 namespace Qt3DRender
@@ -16,6 +15,7 @@ namespace Qt3DCore
     class QEntity;
 }
 
+
 class RenderCamera : public QObject
 {
     Q_OBJECT
@@ -23,7 +23,7 @@ public:
     explicit RenderCamera(QObject *parent = nullptr);
     ~RenderCamera() override;
 
-    void Initialize(Qt3DRender::QCamera* paramCamera, std::shared_ptr<Qt3DCore::QEntity> paramRootEntity);
+    void Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntity* paramRootEntity);
 
     QVector3D GetPos() const {return camPos;}
     QVector3D GetUpVector() const {return camUpVector;}

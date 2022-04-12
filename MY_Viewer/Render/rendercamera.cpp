@@ -6,10 +6,10 @@
 
 RenderCamera::RenderCamera(QObject *parent)
     : QObject(parent)
-    , camera(nullptr)
     , camPos(0.0f, 0.0f, 40.0f)
     , camUpVector(0.0f, 1.0f, 0.0f)
     , camLookAt(0.0f, 0.0f, 0.0f)
+    , camera(nullptr)
 {
 }
 
@@ -17,7 +17,7 @@ RenderCamera::~RenderCamera()
 {
 }
 
-void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, std::shared_ptr<Qt3DCore::QEntity> paramRootEntity)
+void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntity* paramRootEntity)
 {
     if(nullptr != paramCamera && nullptr != paramRootEntity)
     {
@@ -28,7 +28,7 @@ void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, std::shared_ptr<
 
         // For camera controls
         Qt3DExtras::QOrbitCameraController *camController
-                    = new Qt3DExtras::QOrbitCameraController(paramRootEntity.get());
+                    = new Qt3DExtras::QOrbitCameraController(paramRootEntity);
         camController->setLinearSpeed( 50.0f );
         camController->setLookSpeed( 180.0f );
         camController->setCamera(camera);

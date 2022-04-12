@@ -2,7 +2,6 @@
 #define RENDERER_H
 
 #include <QObject>
-#include <memory>
 
 
 namespace Qt3DCore
@@ -12,11 +11,11 @@ namespace Qt3DCore
 namespace Qt3DRender
 {
     class QCamera;
+    class QMesh;
 }
-
 class RenderCamera;
-class RenderModel;
 class RenderBase;
+
 
 class Renderer : public QObject
 {
@@ -25,14 +24,14 @@ public:
     explicit Renderer(QObject *parent = nullptr);
     ~Renderer() override;
 
-    std::shared_ptr<Qt3DCore::QEntity> Initialize(Qt3DRender::QCamera* paramCamera);
+    Qt3DCore::QEntity *Initialize(Qt3DRender::QCamera* paramCamera);
 
-    bool AddModel(const int& paramIndex, const RenderModel& paramModel);
+    bool AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     bool DeleteModel(const int& paramIndex);
 
 private:
-    std::shared_ptr<RenderCamera>           camera;
-    std::shared_ptr<RenderBase>             renderBase;
+    RenderCamera*           camera;
+    RenderBase*             renderBase;
 };
 
 #endif // RENDERER_H

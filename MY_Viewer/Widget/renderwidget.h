@@ -5,8 +5,8 @@
 #include <QWidget>
 
 
-
 class RenderWindow;
+
 
 class RenderWidget : public QWidget
 {
@@ -17,6 +17,7 @@ public:
 
 
     QSize sizeHint() const override;
+
 
 private:
     RenderWindow* renderWindow;

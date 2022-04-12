@@ -4,7 +4,13 @@
 #include <QMainWindow>
 
 
-class ICommand;
+class MDIMainWindow;
+class QListWidget;
+
+namespace Qt3DRender
+{
+    class QMesh;
+}
 
 
 class MainWindow : public QMainWindow
@@ -16,14 +22,16 @@ public:
     ~MainWindow();
 
 private:
-    void _addButtonAction();
+    void addButtons();
 
 
 private slots:
     void _newFile();
-    void _open();
+    void loadModel();
 
 private:
+    MDIMainWindow* mdiMainWindow;
+    QListWidget*   listWidget;
 };
 
 #endif // MAINWINDOW_H

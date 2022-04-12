@@ -5,13 +5,14 @@
 
 RenderBase::RenderBase(QObject *parent)
     : QObject(parent)
+    , rootEntity(nullptr)
 {
 
 }
 
-std::shared_ptr<Qt3DCore::QEntity> RenderBase::Initialize()
+Qt3DCore::QEntity* RenderBase::Initialize()
 {
-    rootEntity = std::make_shared<Qt3DCore::QEntity>();
+    rootEntity = new Qt3DCore::QEntity();
 
     return rootEntity;
 }
@@ -23,11 +24,11 @@ bool RenderBase::AddModel(const int &paramIndex, const RenderModelInfo *paramMod
     if(true == IsEmptyIndex(paramIndex))
     {
         // Torus
-        std::shared_ptr<Qt3DCore::QEntity> modelEntity = std::make_shared<Qt3DCore::QEntity>(rootEntity.get());
+        Qt3DCore::QEntity* modelEntity = new Qt3DCore::QEntity(rootEntity);
 
-        modelEntity->addComponent(paramModel->mesh.get());
-        modelEntity->addComponent(paramModel->material.get());
-        modelEntity->addComponent(paramModel->transform.get());
+        modelEntity->addComponent(paramModel->mesh);
+        modelEntity->addComponent(paramModel->material);
+        modelEntity->addComponent(paramModel->transform);
 
         modelMap[paramIndex] = modelEntity;
 
