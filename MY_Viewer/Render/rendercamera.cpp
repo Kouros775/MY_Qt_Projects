@@ -17,18 +17,18 @@ RenderCamera::~RenderCamera()
 {
 }
 
-void RenderCamera::Initialize(Qt3DRender::QCamera *param, Qt3DCore::QEntity* paramRootEntity)
+void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, std::shared_ptr<Qt3DCore::QEntity> paramRootEntity)
 {
-    if(nullptr != param && nullptr != paramRootEntity)
+    if(nullptr != paramCamera && nullptr != paramRootEntity)
     {
-        camera = param;
+        camera = paramCamera;
 
         camera->lens()->setPerspectiveProjection(45.0f, 2.0f, 0.1f, 2000.0f);
 
 
         // For camera controls
         Qt3DExtras::QOrbitCameraController *camController
-                    = new Qt3DExtras::QOrbitCameraController(paramRootEntity);
+                    = new Qt3DExtras::QOrbitCameraController(paramRootEntity.get());
         camController->setLinearSpeed( 50.0f );
         camController->setLookSpeed( 180.0f );
         camController->setCamera(camera);

@@ -1,16 +1,9 @@
 #include "renderwindow.h"
 #include <Qt3DCore/QEntity>
-#include <Qt3DCore/QTransform>
-#include <Qt3DCore/QAspectEngine>
-
-#include <Qt3DInput/QInputAspect>
-
-#include <Qt3DRender/QRenderAspect>
 #include <Qt3DExtras/QForwardRenderer>
-#include <Qt3DExtras/QPhongMaterial>
-#include <Qt3DExtras/QTorusMesh>
 
-#include "Render/rendercamera.h"
+#include "Render/renderer.h"
+#include "Render/rendermodel.h"
 
 
 RenderWindow::RenderWindow(QScreen *screen)
@@ -18,52 +11,30 @@ RenderWindow::RenderWindow(QScreen *screen)
 {
     defaultFrameGraph()->setClearColor(QColor(77, 77, 77));
 
-    m_rootEntity = new Qt3DCore::QEntity;
-    setRootEntity(m_rootEntity);
+    Initialize();
 
-    // Camera
-    renderCamera = new RenderCamera();
-    renderCamera->Initialize(this->camera(), m_rootEntity);
-
-    createRootEntry();
+    //RenderModel* temp = new RenderModel();
+    //temp->MakeTorus(1.0f, 5.0f, 10,20);
+    //
+    //renderer->AddModel(1, *temp);
 }
+
 
 RenderWindow::~RenderWindow()
 {
 
 }
 
-
-void RenderWindow::createRootEntry()
+void RenderWindow::Initialize()
 {
-    // Material
-    Qt3DRender::QMaterial *material = new Qt3DExtras::QPhongMaterial();
-
-    // Torus
-    torusEntity = new Qt3DCore::QEntity(m_rootEntity);
-    Qt3DExtras::QTorusMesh *torusMesh = new Qt3DExtras::QTorusMesh;
-    torusMesh->setRadius(5);
-    torusMesh->setMinorRadius(1);
-    torusMesh->setRings(100);
-    torusMesh->setSlices(20);
-
-    Qt3DCore::QTransform *torusTransform = new Qt3DCore::QTransform;
-    torusTransform->setScale3D(QVector3D(1.5, 1, 0.5));
-    torusTransform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 45.0f));
-
-    torusEntity->addComponent(torusMesh);
-    torusEntity->addComponent(torusTransform);
-    torusEntity->addComponent(material);
+    renderer = std::shared_ptr<Renderer>();
+    std::shared_ptr<Qt3DCore::QEntity> rootEntity = renderer->Initialize(this->camera());
+    setRootEntity(rootEntity.get());
 }
 
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
-    if(torusEntity != nullptr)
-    {
-        delete torusEntity;
-        torusEntity = nullptr;
-    }
     qDebug(__FUNCTION__);
 }
 

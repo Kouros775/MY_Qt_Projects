@@ -2,9 +2,10 @@
 #define RENDERWINDOW_H
 
 #include <Qt3DExtras/Qt3DWindow>
+#include <memory>
 
 
-class RenderCamera;
+class Renderer;
 
 
 class RenderWindow : public Qt3DExtras::Qt3DWindow
@@ -13,7 +14,7 @@ public:
     explicit RenderWindow(QScreen *screen = nullptr);
     ~RenderWindow() override;
 
-
+    void Initialize();
     void createRootEntry();
 
     // QWindow interface
@@ -24,11 +25,7 @@ protected:
 
 
 private:
-    Qt3DCore::QEntity *m_rootEntity;
-
-    // Camera
-    RenderCamera* renderCamera;
-    Qt3DCore::QEntity *torusEntity;
+    std::shared_ptr<Renderer> renderer;
 };
 
 #endif // RENDERWINDOW_H

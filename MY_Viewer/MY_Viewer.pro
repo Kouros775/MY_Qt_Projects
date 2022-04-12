@@ -11,6 +11,8 @@ CONFIG += c++11
 LIBS += -lopengl32
 
 SOURCES += \
+    Render/renderbase.cpp \
+    Render/renderer.cpp \
     Render/rendermodel.cpp \
         main.cpp \
         mainwindow.cpp \
@@ -28,6 +30,8 @@ SOURCES += \
     Widget/renderwindow.cpp
 
 HEADERS += \
+    Render/renderbase.h \
+    Render/renderer.h \
     Render/rendermodel.h \
         mainwindow.h \
         mdimainwindow.h \

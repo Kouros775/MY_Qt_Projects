@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QVector3D>
+#include <memory>
 
 
 namespace Qt3DRender
@@ -22,7 +23,7 @@ public:
     explicit RenderCamera(QObject *parent = nullptr);
     ~RenderCamera() override;
 
-    void Initialize(Qt3DRender::QCamera* param, Qt3DCore::QEntity* paramRootEntity);
+    void Initialize(Qt3DRender::QCamera* paramCamera, std::shared_ptr<Qt3DCore::QEntity> paramRootEntity);
 
     QVector3D GetPos() const {return camPos;}
     QVector3D GetUpVector() const {return camUpVector;}
@@ -32,8 +33,6 @@ public:
     void SetUpVector(const QVector3D& paramUpVector);
     void SetLookAt(const QVector3D& paramLookAt);
 
-    void SetCamera(Qt3DRender::QCamera* param){this->camera = param;}
-    Qt3DRender::QCamera* GetCamera() const {return camera;}
 private:
     QVector3D camPos;
     QVector3D camUpVector;
