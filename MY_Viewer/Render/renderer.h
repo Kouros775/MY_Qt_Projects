@@ -3,7 +3,6 @@
 
 #include <QObject>
 
-
 #define SAFE_DELETE(x)			if(x){delete x;x=nullptr;}
 #define SAFE_DELETE_ARRAY(x)	if(x){delete[] x;x=nullptr;}
 
@@ -18,6 +17,8 @@ namespace Qt3DRender
     class QMesh;
     class QPickEvent;
 }
+
+
 class RenderCamera;
 class RenderBase;
 class MeshModel;
@@ -39,6 +40,15 @@ public:
     bool Scale(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
 
     MeshModel* GetModel(const int& paramIndex) const;
+
+private:
+    void initializeLight();
+
+
+private slots:
+    void pressed(Qt3DRender::QPickEvent *pick);
+    void moved(Qt3DRender::QPickEvent *pick);
+
 private:
     Qt3DCore::QEntity*      rootEntity;
     RenderCamera*           camera;

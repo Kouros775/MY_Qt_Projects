@@ -3,9 +3,12 @@
 #include <Qt3DExtras>
 #include <Qt3DCore/QEntity>
 
+
 #include "Render/renderbase.h"
 #include "Render/rendercamera.h"
 #include "Render/meshmodel.h"
+
+#include "renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +43,21 @@ Renderer::~Renderer()
 Qt3DCore::QEntity* Renderer::Initialize(Qt3DRender::QCamera* paramCamera)
 {
     rootEntity = renderBase->Initialize();
+    initializeLight();
+
+
+
+    //Qt3DRender::QDirectionalLight* directionLight = new Qt3DRender::QDirectionalLight(rootEntity);
+    //directionLight->setWorldDirection(QVector3D(0.0f, 1.0f, 0.0f));
+    //directionLight->setIntensity(10.0f);
+    //rootEntity->addComponent(directionLight);
+
+
+    Qt3DRender::QObjectPicker* picker = new Qt3DRender::QObjectPicker(rootEntity);
+    QObject::connect(picker, &Qt3DRender::QObjectPicker::pressed, this, &Renderer::pressed);
+    QObject::connect(picker, &Qt3DRender::QObjectPicker::moved, this, &Renderer::moved);
+    rootEntity->addComponent(picker);
+
 
     camera  = new RenderCamera();
     camera->Initialize(paramCamera, rootEntity);
@@ -74,11 +92,11 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 
     // >> material
     Qt3DExtras::QPhongMaterial* material = new Qt3DExtras::QPhongMaterial(model);
-    QColor color(255, 30, 30);
+    QColor color(100, 100, 100);
     material->setDiffuse(color);
     material->setSpecular(color);
     material->setAmbient(color);
-    material->setShininess(5.0f);
+    material->setShininess(3.0f);
     model->addComponent(material);
     // << material
 
@@ -148,7 +166,7 @@ bool Renderer::Rotate(const int& paramIndex, const QPoint& startPoint, const QPo
     {
         Qt3DCore::QTransform* transform = model->GetTransform();
         QVector3D pos;
-        pos.toPoint()
+
         //transform->set
     }
     else
@@ -194,4 +212,88 @@ bool Renderer::Scale(const int& paramIndex, const QPoint& startPoint, const QPoi
 MeshModel *Renderer::GetModel(const int &paramIndex) const
 {
     return renderBase->GetModel(paramIndex);
+}
+
+void Renderer::initializeLight()
+{
+    float intensity = 0.4f;
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(0, 0, 60.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(0, 0, -60.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(60, 0, 0.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(-60, 0, 0.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(0, 60, 0.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    {
+        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
+        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
+        light->setColor("white");
+        light->setIntensity(intensity);
+        lightEntity->addComponent(light);
+
+        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
+        lightTransform->setTranslation(QVector3D(0, -60, 0.0f));
+        lightEntity->addComponent(lightTransform);
+    }
+    //// << light
+
+}
+
+
+void Renderer::pressed(Qt3DRender::QPickEvent *pick)
+{
+    qDebug() <<__FUNCTION__;
+}
+
+void Renderer::moved(Qt3DRender::QPickEvent *pick)
+{
+    qDebug() <<__FUNCTION__;
 }

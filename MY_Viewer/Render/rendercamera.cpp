@@ -22,8 +22,9 @@ void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntit
     if(nullptr != paramCamera && nullptr != paramRootEntity)
     {
         camera = paramCamera;
-        camera->setProjectionType(Qt3DRender::QCameraLens::PerspectiveProjection);
-        //camera->lens()->setPerspectiveProjection(60.0f, 2.0f, 0.1f, 1000.0f);
+        //camera->setProjectionType(Qt3DRender::QCameraLens::PerspectiveProjection);
+        //camera->lens()->setOrthographicProjection()
+        camera->lens()->setPerspectiveProjection(45.0f, 2.0f, 0.1f, 1000.0f);
 
 
         // For camera controls
@@ -34,14 +35,11 @@ void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntit
         camController->setCamera(camera);
 
 
-        QVector3D m_camPos3D        = QVector3D(0, 0, 40.0);
-        QVector3D m_camUpVector3D   = QVector3D(0, 1, 0);
-        QVector3D m_camViewCenter3D = QVector3D(0, 0, 0);
 
         // Camera
-        SetPos(m_camPos3D);
-        SetUpVector(m_camUpVector3D);
-        SetLookAt(m_camViewCenter3D);
+        SetPos(camPos);
+        SetUpVector(camUpVector);
+        SetLookAt(camLookAt);
     }
     else
     {
