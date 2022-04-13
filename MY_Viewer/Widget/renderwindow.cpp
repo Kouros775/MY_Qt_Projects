@@ -5,11 +5,13 @@
 #include "Render/renderer.h"
 #include <Qt3DRender/QMesh>
 
+
+
+
 RenderWindow::RenderWindow(QScreen *screen)
     : Qt3DExtras::Qt3DWindow(screen)
 {
     defaultFrameGraph()->setClearColor(QColor(77, 77, 77));
-
     Initialize();
 }
 

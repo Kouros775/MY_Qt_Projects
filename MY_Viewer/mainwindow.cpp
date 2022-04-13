@@ -105,6 +105,6 @@ void MainWindow::loadModel()
     QString name = QString::number(index) + " : " + meshName;
 
     listWidget->addItems(QStringList() << name);
-
+    qDebug() << "load model index : " << index;
     mdiMainWindow->AddModel(index, loadMesh);
 }

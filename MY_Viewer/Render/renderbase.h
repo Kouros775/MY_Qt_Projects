@@ -14,13 +14,10 @@ namespace Qt3DRender
 {
     class QMesh;
     class QMaterial;
+    class QObjectPicker;
 }
-struct RenderModelInfo
-{
-    Qt3DCore::QTransform* transform;
-    Qt3DRender::QMaterial* material;
-    Qt3DRender::QMesh* mesh;
-};
+
+class MeshModel;
 
 
 class RenderBase : public QObject
@@ -30,13 +27,14 @@ public:
     explicit RenderBase(QObject *parent = nullptr);
     Qt3DCore::QEntity* Initialize();
 
-    bool AddModel(const int& paramIndex, const RenderModelInfo* paramModel);
+    bool AddModel(const int& paramIndex, MeshModel* paramModel);
     bool DeleteModel(const int& paramIndex);
     bool IsEmptyIndex(const int& paramIndex) const;
+    bool PickModel(const QPoint& point) const;
 
 private:
     Qt3DCore::QEntity*                  rootEntity;
-    QMap<int, Qt3DCore::QEntity*>       modelMap;
+    QMap<int, MeshModel*>       modelMap;
 };
 
 #endif // RENDERBASE_H

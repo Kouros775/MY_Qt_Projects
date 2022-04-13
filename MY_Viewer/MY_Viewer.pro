@@ -11,6 +11,7 @@ CONFIG += c++11
 LIBS += -lopengl32
 
 SOURCES += \
+    Render/meshmodel.cpp \
     Render/renderbase.cpp \
     Render/renderer.cpp \
         main.cpp \
@@ -27,6 +28,7 @@ SOURCES += \
     Document/modeldocument.cpp
 
 HEADERS += \
+    Render/meshmodel.h \
     Render/renderbase.h \
     Render/renderer.h \
         mainwindow.h \

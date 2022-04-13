@@ -12,6 +12,7 @@ namespace Qt3DRender
 {
     class QCamera;
     class QMesh;
+    class QPickEvent;
 }
 class RenderCamera;
 class RenderBase;
@@ -29,7 +30,11 @@ public:
     bool AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     bool DeleteModel(const int& paramIndex);
 
+private slots:
+    void PickModel(Qt3DRender::QPickEvent*) const;
+
 private:
+    Qt3DCore::QEntity*      rootEntity;
     RenderCamera*           camera;
     RenderBase*             renderBase;
 };
