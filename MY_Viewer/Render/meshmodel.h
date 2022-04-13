@@ -9,6 +9,7 @@ namespace Qt3DCore
 {
     class QComponent;
     class QEntity;
+    class QTransform;
 }
 namespace Qt3DRender
 {
@@ -26,15 +27,9 @@ public:
     void SetIndex(const int& paramIndex){this->index = paramIndex;}
     int GetIndex() const {return index;}
 
-    void SetName(const QString& paramName){this->name = paramName;}
-    QString GetName() const {return name;}
-
-private slots:
-    void entered();
-    void clicked(Qt3DRender::QPickEvent *pick);
+    Qt3DCore::QTransform* GetTransform() const;
 private:
     int index;
-    QString name;
 };
 
 #endif // MESHMODEL_H

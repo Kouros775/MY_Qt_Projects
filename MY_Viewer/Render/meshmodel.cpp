@@ -1,12 +1,12 @@
 #include "meshmodel.h"
-#include "meshmodel.h"
-#include <Qt3DCore/QEntity>
 #include <QDebug>
-#include <Qt3DRender/QObjectPicker>
+#include <Qt3DCore/QEntity>
+#include <Qt3DCore/QTransform>
 
 
 MeshModel::MeshModel(Qt3DCore::QEntity* parent)
     : QEntity(parent)
+    , index(0)
 {
 }
 
@@ -16,16 +16,29 @@ MeshModel::~MeshModel()
 
 }
 
-
-void MeshModel::clicked(Qt3DRender::QPickEvent *pick)
+Qt3DCore::QTransform *MeshModel::GetTransform() const
 {
-    Q_UNUSED(pick);
+    Qt3DCore::QTransform* transform = nullptr;
 
-    qDebug()<<"clicked : " <<name;
+    //QComponents
+    Qt3DCore::QComponentVector components = this->components();
+
+    for(int i = 0 ; i < components.size() ; i++)
+    {
+        Qt3DCore::QTransform* component = dynamic_cast<Qt3DCore::QTransform*>(components[i]);
+
+        if(nullptr != component)
+        {
+            transform = component;
+            break;
+        }
+        else
+        {
+            continue;
+        }
+    }
+
+    return transform;
 }
 
-void MeshModel::entered()
-{
-    qDebug()<<"entered : " <<name;
 
-}
