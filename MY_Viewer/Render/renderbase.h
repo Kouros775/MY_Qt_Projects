@@ -7,15 +7,9 @@
 
 namespace Qt3DCore
 {
-    class QTransform;
     class QEntity;
 }
-namespace Qt3DRender
-{
-    class QMesh;
-    class QMaterial;
-    class QObjectPicker;
-}
+
 
 class MeshModel;
 
@@ -30,7 +24,8 @@ public:
     bool AddModel(const int& paramIndex, MeshModel* paramModel);
     bool DeleteModel(const int& paramIndex);
     bool IsEmptyIndex(const int& paramIndex) const;
-    bool PickModel(const QPoint& point) const;
+
+    MeshModel* GetModel(const int& paramIndex) const;
 
 private:
     Qt3DCore::QEntity*                  rootEntity;

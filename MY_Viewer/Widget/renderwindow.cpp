@@ -10,6 +10,7 @@
 
 RenderWindow::RenderWindow(QScreen *screen)
     : Qt3DExtras::Qt3DWindow(screen)
+    , selectedIndex(0)
 {
     defaultFrameGraph()->setClearColor(QColor(77, 77, 77));
     Initialize();
@@ -25,6 +26,7 @@ void RenderWindow::Initialize()
 {
     renderer = std::make_shared<Renderer>();
     Qt3DCore::QEntity* rootEntity = renderer->Initialize(this->camera());
+
     setRootEntity(rootEntity);
 }
 
@@ -32,6 +34,7 @@ void RenderWindow::Initialize()
 void RenderWindow::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
     renderer->AddModel(paramIndex, paramMesh);
+    selectedIndex = paramIndex;
 }
 
 

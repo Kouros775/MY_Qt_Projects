@@ -1,6 +1,7 @@
 #include "renderbase.h"
 #include <Qt3DCore>
 #include <Qt3DRender>
+#include <Qt3DCore/QEntity>
 
 #include "Render/meshmodel.h"
 
@@ -79,7 +80,20 @@ bool RenderBase::IsEmptyIndex(const int &paramIndex) const
 }
 
 
-bool RenderBase::PickModel(const QPoint &point) const
+MeshModel *RenderBase::GetModel(const int &paramIndex) const
 {
+    MeshModel* model = nullptr;
 
+    if(false == IsEmptyIndex(paramIndex))
+    {
+        auto findIndex = modelMap.find(paramIndex);
+
+        model = findIndex.value();
+    }
+    else
+    {
+        assert(0);
+    }
+
+    return model;
 }

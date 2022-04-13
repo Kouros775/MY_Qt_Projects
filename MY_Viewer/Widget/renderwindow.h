@@ -32,6 +32,7 @@ protected:
 
 private:
     std::shared_ptr<Renderer> renderer;
+    int                       selectedIndex;
 };
 
 #endif // RENDERWINDOW_H

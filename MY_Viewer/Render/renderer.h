@@ -4,6 +4,10 @@
 #include <QObject>
 
 
+#define SAFE_DELETE(x)			if(x){delete x;x=nullptr;}
+#define SAFE_DELETE_ARRAY(x)	if(x){delete[] x;x=nullptr;}
+
+
 namespace Qt3DCore
 {
     class QEntity;
@@ -16,7 +20,7 @@ namespace Qt3DRender
 }
 class RenderCamera;
 class RenderBase;
-
+class MeshModel;
 
 class Renderer : public QObject
 {
@@ -30,9 +34,11 @@ public:
     bool AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     bool DeleteModel(const int& paramIndex);
 
-private slots:
-    void PickModel(Qt3DRender::QPickEvent*) const;
+    bool Translate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
+    bool Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
+    bool Scale(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
 
+    MeshModel* GetModel(const int& paramIndex) const;
 private:
     Qt3DCore::QEntity*      rootEntity;
     RenderCamera*           camera;

@@ -1,6 +1,7 @@
 #include "renderer.h"
 #include <Qt3DRender>
 #include <Qt3DExtras>
+#include <Qt3DCore/QEntity>
 
 #include "Render/renderbase.h"
 #include "Render/rendercamera.h"
@@ -13,8 +14,8 @@
 ///
 Renderer::Renderer(QObject *parent)
     : QObject(parent)
-    , camera(nullptr)
     , rootEntity(nullptr)
+    , camera(nullptr)
     , renderBase(nullptr)
 {
     renderBase = new RenderBase();
@@ -27,7 +28,8 @@ Renderer::Renderer(QObject *parent)
 ///
 Renderer::~Renderer()
 {
-
+    SAFE_DELETE(renderBase);
+    SAFE_DELETE(camera);
 }
 
 
@@ -58,41 +60,27 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 
     MeshModel* model = new MeshModel(rootEntity);
     model->setObjectName(paramMesh->meshName());
+    model->SetIndex(paramIndex);
 
-    //model->objectName()
+    // >> mesh
     paramMesh->parentChanged(model);
+    model->addComponent(paramMesh);
+    // << mesh
+
+    // >> transform
     Qt3DCore::QTransform* transform = new Qt3DCore::QTransform(model);
+    model->addComponent(transform);
+    // << transform
+
+    // >> material
     Qt3DExtras::QPhongMaterial* material = new Qt3DExtras::QPhongMaterial(model);
     QColor color(255, 30, 30);
     material->setDiffuse(color);
     material->setSpecular(color);
     material->setAmbient(color);
     material->setShininess(5.0f);
-
-    Qt3DRender::QObjectPicker* picker = new Qt3DRender::QObjectPicker(model);
-    picker->setHoverEnabled(false);
-    picker->setEnabled(true);
-
-    model->SetIndex(paramIndex);
-    model->SetName(paramMesh->meshName());
     model->addComponent(material);
-    model->addComponent(transform);
-    model->addComponent(paramMesh);
-    model->addComponent(picker);
-
-    QObject::connect(picker, SIGNAL(pressed(Qt3DRender::QPickEvent*)), this, SLOT(PickModel(Qt3DRender::QPickEvent*)));
-    // QObject::connect(picker2, &Qt3DRender::QObjectPicker::pressed, this, &MainWindow::onPicked);
-
-
-
-
-    Qt3DRender::QRenderSettings* m_renderSettings = new Qt3DRender::QRenderSettings(model);
-        m_renderSettings->pickingSettings()->setPickMethod(Qt3DRender::QPickingSettings::TrianglePicking);
-        m_renderSettings->pickingSettings()->setPickResultMode(Qt3DRender::QPickingSettings::NearestPick);
-
-    model->addComponent(m_renderSettings);
-
-
+    // << material
 
     bRes = renderBase->AddModel(paramIndex, model);
 
@@ -115,13 +103,95 @@ bool Renderer::DeleteModel(const int &paramIndex)
     return bRes;
 }
 
-#include <Qt3DRender/QPickEvent>
 
-void Renderer::PickModel(Qt3DRender::QPickEvent* evt) const
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::Translate
+/// \param paramIndex
+/// \param startPoint
+/// \param endPoint
+/// \return
+///
+bool Renderer::Translate(const int &paramIndex, const QPoint& startPoint, const QPoint& endPoint)
 {
-    Q_UNUSED(evt);
-    MeshModel* entity = qobject_cast<MeshModel*>(sender()->parent());
-    //qDebug() << "Picked " << entity->objectName();
-    QVector3D pickPos = evt->worldIntersection();
-    qDebug() << "PickPos : " << pickPos.x() <<", " <<pickPos.y()<<", " << pickPos.z();
+    bool bRes = false;
+
+    MeshModel* model = GetModel(paramIndex);
+    if(nullptr != model)
+    {
+        Qt3DCore::QTransform* transform = model->GetTransform();
+        //transform->set
+
+        QVector3D startPos(startPoint);
+    }
+    else
+    {
+
+    }
+
+    return bRes;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::Rotate
+/// \param paramIndex
+/// \param startPoint
+/// \param endPoint
+/// \return
+///
+bool Renderer::Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint)
+{
+    bool bRes = false;
+
+    MeshModel* model = GetModel(paramIndex);
+    if(nullptr != model)
+    {
+        Qt3DCore::QTransform* transform = model->GetTransform();
+        QVector3D pos;
+        pos.toPoint()
+        //transform->set
+    }
+    else
+    {
+
+    }
+
+    return bRes;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::Scale
+/// \param paramIndex
+/// \param startPoint
+/// \param endPoint
+/// \return
+///
+bool Renderer::Scale(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint)
+{
+    bool bRes = false;
+
+    MeshModel* model = GetModel(paramIndex);
+    if(nullptr != model)
+    {
+        Qt3DCore::QTransform* transform = model->GetTransform();
+        //transform->set
+    }
+    else
+    {
+
+    }
+
+    return bRes;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// \brief Renderer::GetModel
+/// \param paramIndex
+/// \return
+///
+MeshModel *Renderer::GetModel(const int &paramIndex) const
+{
+    return renderBase->GetModel(paramIndex);
 }
