@@ -7,16 +7,21 @@
 #include <QStatusBar>
 #include <QListWidget>
 #include <QDockWidget>
-#include <mdimainwindow.h>
 #include <QApplication>
 #include <QFileDialog>
 #include <Qt3DRender>
 
+
 #include "Document/modeldocument.h"
+#include "Widget/modellistwidgetitem.h"
+
+#include "mdimainwindow.h"
 
 
-#define IMAGE_PATH_NEW_ACTION ":/images/new.png"
-#define IMAGE_PATH_OPEN_ACTION ":/images/open.png"
+#define IMAGE_PATH_OPEN_ACTION          ":/images/open.png"
+#define IMAGE_PATH_DELETE_ACTION        "://images/model_delete.png"
+#define IMAGE_PATH_MODEL_WIDGET_ITEM    "://images/model_image.png"
+
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -29,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent)
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
     listWidget = new QListWidget(dock);
-
+    connect(listWidget, &QListWidget::itemPressed, this, &MainWindow::itemPressed);
     dock->setWidget(listWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 
@@ -52,12 +57,7 @@ void MainWindow::addButtons()
     fileMenu = menuBar()->addMenu(tr("&File"));
 
 
-    QAction* newAct;
-    newAct = new QAction(QIcon(IMAGE_PATH_NEW_ACTION), tr("&New"), this);
-    newAct->setShortcuts(QKeySequence::New);
-    newAct->setStatusTip(tr("Create a new File"));
-    connect(newAct, &QAction::triggered, this, &MainWindow::_newFile);
-    fileMenu->addAction(newAct);
+
 
 
     QAction* openAct;
@@ -65,9 +65,15 @@ void MainWindow::addButtons()
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Load Model File."));
     connect(openAct, &QAction::triggered, this, &MainWindow::loadModel);
-
-
     fileMenu->addAction(openAct);
+
+
+    QAction* newAct;
+    newAct = new QAction(QIcon(IMAGE_PATH_DELETE_ACTION), tr("&Delete"), this);
+    newAct->setShortcuts(QKeySequence::New);
+    newAct->setStatusTip(tr("Delete Model File."));
+    connect(newAct, &QAction::triggered, this, &MainWindow::deleteModel);
+    fileMenu->addAction(newAct);
 
 
 
@@ -75,11 +81,6 @@ void MainWindow::addButtons()
     fileToolBar = addToolBar(tr("File"));
     fileToolBar->addAction(newAct);
     fileToolBar->addAction(openAct);
-}
-
-
-void MainWindow::_newFile()
-{
 }
 
 
@@ -101,10 +102,35 @@ void MainWindow::loadModel()
 
     ModelDocument& modelDocument = ModelDocument::Instance();
     int index = modelDocument.AddModel(loadMesh);
+    modelDocument.SetSelectedIndex(index);
 
-    QString name = QString::number(index) + " : " + meshName;
 
-    listWidget->addItems(QStringList() << name);
-    qDebug() << "load model index : " << index;
+    QString itemText = QString::number(index) + " : " + meshName;
+
+    ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
+    item->SetIndex(index);
+    item->SetName(meshName);
+
+    listWidget->addItem(item);
     mdiMainWindow->AddModel(index, loadMesh);
 }
+
+
+void MainWindow::deleteModel()
+{
+    ModelDocument& modelDocument = ModelDocument::Instance();
+    int selectedIndex = modelDocument.GetSelectedIndex();
+    modelDocument.SetSelectedIndex(0);
+}
+
+
+void MainWindow::itemPressed(QListWidgetItem *item)
+{
+    ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(item);
+
+    ModelDocument& modelDocument = ModelDocument::Instance();
+    modelDocument.SetSelectedIndex(modelItem->GetIndex());
+    qDebug() << modelItem->GetIndex() <<" : " << modelItem->GetName();
+}
+
+

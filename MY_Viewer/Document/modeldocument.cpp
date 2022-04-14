@@ -4,6 +4,7 @@
 ModelDocument::ModelDocument(QObject *parent)
     : QObject(parent)
     , currentIndex(1)
+    , selectedIndex(0)
 {
 }
 

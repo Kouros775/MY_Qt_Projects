@@ -6,6 +6,8 @@
 
 class MDIMainWindow;
 class QListWidget;
+class QListWidgetItem;
+
 
 namespace Qt3DRender
 {
@@ -26,9 +28,10 @@ private:
 
 
 private slots:
-    void _newFile();
     void loadModel();
+    void deleteModel();
 
+    void itemPressed(QListWidgetItem *item);
 private:
     MDIMainWindow* mdiMainWindow;
     QListWidget*   listWidget;

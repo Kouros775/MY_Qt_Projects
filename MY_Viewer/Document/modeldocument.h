@@ -24,6 +24,9 @@ public:
     int AddModel(Qt3DRender::QMesh* paramMesh);
     Qt3DRender::QMesh* GetModel(const int& paramIndex) const;
 
+    void SetSelectedIndex(const int& paramIndex){selectedIndex = paramIndex;}
+    int GetSelectedIndex() const {return selectedIndex;}
+
 private:
     bool isEmptyIndex(const int& paramIndex) const;
 
@@ -33,6 +36,7 @@ private:
 
     QMap<int, Qt3DRender::QMesh*> mapMesh;
     int currentIndex;
+    int selectedIndex;
 };
 
 #endif // MODELDOCUMENT_H

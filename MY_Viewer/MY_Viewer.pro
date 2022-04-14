@@ -25,7 +25,8 @@ SOURCES += \
     Widget/renderwidget.cpp \
     Render/rendercamera.cpp \
     Widget/renderwindow.cpp \
-    Document/modeldocument.cpp
+    Document/modeldocument.cpp \
+    Widget/modellistwidgetitem.cpp
 
 HEADERS += \
     Render/meshmodel.h \
@@ -41,7 +42,8 @@ HEADERS += \
     Widget/renderwidget.h \
     Render/rendercamera.h \
     Widget/renderwindow.h \
-    Document/modeldocument.h
+    Document/modeldocument.h \
+    Widget/modellistwidgetitem.h
 
 
 # Default rules for deployment.
