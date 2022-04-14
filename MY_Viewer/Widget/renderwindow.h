@@ -20,8 +20,9 @@ public:
     ~RenderWindow() override;
 
     void Initialize();
-    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
 
+    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
+    void RemoveModel(const int& paramIndex);
 
     // QWindow interface
 protected:
@@ -32,7 +33,6 @@ protected:
 
 private:
     std::shared_ptr<Renderer> renderer;
-    int                       selectedIndex;
 };
 
 #endif // RENDERWINDOW_H

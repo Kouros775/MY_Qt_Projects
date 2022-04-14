@@ -4,15 +4,9 @@
 #include <QMainWindow>
 
 
-class MDIMainWindow;
+class RenderWidget;
 class QListWidget;
 class QListWidgetItem;
-
-
-namespace Qt3DRender
-{
-    class QMesh;
-}
 
 
 class MainWindow : public QMainWindow
@@ -24,16 +18,17 @@ public:
     ~MainWindow();
 
 private:
-    void addButtons();
+    void addWidgets();
 
 
 private slots:
+    void newScene();
     void loadModel();
     void deleteModel();
 
     void itemPressed(QListWidgetItem *item);
 private:
-    MDIMainWindow* mdiMainWindow;
+    RenderWidget*  renderWidget;
     QListWidget*   listWidget;
 };
 

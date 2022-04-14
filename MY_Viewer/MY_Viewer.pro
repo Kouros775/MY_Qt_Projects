@@ -16,7 +16,6 @@ SOURCES += \
     Render/renderer.cpp \
         main.cpp \
         mainwindow.cpp \
-        mdimainwindow.cpp \
     Command/icommand.cpp \
     Command/Transform/commandtransformtranslate.cpp \
     Command/Transform/commandtransform.cpp \
@@ -33,7 +32,6 @@ HEADERS += \
     Render/renderbase.h \
     Render/renderer.h \
         mainwindow.h \
-        mdimainwindow.h \
     Command/icommand.h \
     Command/Transform/commandtransformtranslate.h \
     Command/Transform/commandtransform.h \

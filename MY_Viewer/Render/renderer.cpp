@@ -112,7 +112,7 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 /// \param paramIndex
 /// \return
 ///
-bool Renderer::DeleteModel(const int &paramIndex)
+bool Renderer::RemoveModel(const int &paramIndex)
 {
     bool bRes = false;
 

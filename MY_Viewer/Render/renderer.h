@@ -33,7 +33,7 @@ public:
     Qt3DCore::QEntity *Initialize(Qt3DRender::QCamera* paramCamera);
 
     bool AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
-    bool DeleteModel(const int& paramIndex);
+    bool RemoveModel(const int& paramIndex);
 
     bool Translate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
     bool Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
