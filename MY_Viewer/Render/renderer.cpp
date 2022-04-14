@@ -116,7 +116,7 @@ bool Renderer::RemoveModel(const int &paramIndex)
 {
     bool bRes = false;
 
-    Q_UNUSED(paramIndex);
+    bRes = renderBase->RemoveModel(paramIndex);
 
     return bRes;
 }

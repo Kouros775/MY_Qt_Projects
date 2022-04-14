@@ -131,6 +131,9 @@ void MainWindow::deleteModel()
     modelDocument.SetSelectedIndex(0);
 
     renderWidget->RemoveModel(selectedIndex);
+
+
+    listWidget->takeItem(listWidget->currentRow());
 }
 
 

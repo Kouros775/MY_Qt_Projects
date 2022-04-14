@@ -38,7 +38,7 @@ bool RenderBase::AddModel(const int &paramIndex, MeshModel *paramModel)
     return bRes;
 }
 
-bool RenderBase::DeleteModel(const int &paramIndex)
+bool RenderBase::RemoveModel(const int &paramIndex)
 {
     bool bRes = false;
 
@@ -46,7 +46,7 @@ bool RenderBase::DeleteModel(const int &paramIndex)
     {
         auto findIndex = modelMap.find(paramIndex);
 
-        //modelMap[paramIndex]->~QEntity();
+        modelMap[paramIndex]->~MeshModel();
         modelMap.erase(findIndex);
 
         bRes = true;

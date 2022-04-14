@@ -13,7 +13,6 @@ MeshModel::MeshModel(Qt3DCore::QEntity* parent)
 
 MeshModel::~MeshModel()
 {
-
 }
 
 Qt3DCore::QTransform *MeshModel::GetTransform() const

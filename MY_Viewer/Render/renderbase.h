@@ -22,7 +22,7 @@ public:
     Qt3DCore::QEntity* Initialize();
 
     bool AddModel(const int& paramIndex, MeshModel* paramModel);
-    bool DeleteModel(const int& paramIndex);
+    bool RemoveModel(const int& paramIndex);
     bool IsEmptyIndex(const int& paramIndex) const;
 
     MeshModel* GetModel(const int& paramIndex) const;
