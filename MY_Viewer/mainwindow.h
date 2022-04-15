@@ -14,7 +14,6 @@ class QListWidget;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -28,7 +27,6 @@ private:
 private:
     RenderWidget*   renderWidget;
     QListWidget*    listWidget;
-
 
     CommandLoadModel*               commandLoadModel;
     CommandRemoveModel*             commandRemoveModel;

@@ -18,16 +18,14 @@ SOURCES += \
         mainwindow.cpp \
     Command/icommand.cpp \
     Command/Transform/commandtransformtranslate.cpp \
-    Command/Transform/commandtransform.cpp \
-    Command/Transform/commandtransformrotate.cpp \
-    Command/Transform/commandtransformscale.cpp \
     Widget/renderwidget.cpp \
     Render/rendercamera.cpp \
     Widget/renderwindow.cpp \
     Widget/modellistwidgetitem.cpp \
     Command/commandloadmodel.cpp \
     Command/commandremovemodel.cpp \
-    Command/commandselectlistwidgetitem.cpp
+    Command/commandselectlistwidgetitem.cpp \
+    Command/commandtorusadd.cpp
 
 HEADERS += \
     Render/meshmodel.h \
@@ -36,16 +34,14 @@ HEADERS += \
         mainwindow.h \
     Command/icommand.h \
     Command/Transform/commandtransformtranslate.h \
-    Command/Transform/commandtransform.h \
-    Command/Transform/commandtransformrotate.h \
-    Command/Transform/commandtransformscale.h \
     Widget/renderwidget.h \
     Render/rendercamera.h \
     Widget/renderwindow.h \
     Widget/modellistwidgetitem.h \
     Command/commandloadmodel.h \
     Command/commandremovemodel.h \
-    Command/commandselectlistwidgetitem.h
+    Command/commandselectlistwidgetitem.h \
+    Command/commandtorusadd.h
 
 
 # Default rules for deployment.

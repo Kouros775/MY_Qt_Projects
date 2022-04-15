@@ -19,10 +19,11 @@ RenderWidget::RenderWidget(QWidget *parent)
     setLayout(layout);
 }
 
+
 RenderWidget::~RenderWidget()
 {
-    qDebug() <<__FUNCTION__;
 }
+
 
 QSize RenderWidget::sizeHint() const
 {

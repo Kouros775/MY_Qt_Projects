@@ -1,10 +1,10 @@
 #include "renderwindow.h"
 #include <Qt3DCore/QEntity>
 #include <Qt3DExtras/QForwardRenderer>
-
-#include "Render/renderer.h"
+#include <QMouseEvent>
 #include <Qt3DRender/QMesh>
 
+#include "Render/renderer.h"
 
 
 
@@ -49,7 +49,7 @@ void RenderWindow::SelectModel(const int &paramIndex)
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    qDebug() <<__FUNCTION__;
 }
 
 
@@ -60,5 +60,5 @@ void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
-    Q_UNUSED(event);
+    qDebug() <<__FUNCTION__;
 }

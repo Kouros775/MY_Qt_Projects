@@ -1,27 +1,30 @@
 #include "commandtransformtranslate.h"
 
-CommandTransformTranslate::CommandTransformTranslate()
-{
 
+CommandTransformTranslate::CommandTransformTranslate(QObject *parent)
+    : ICommand(parent)
+{
 }
+
+
+CommandTransformTranslate::~CommandTransformTranslate()
+{
+}
+
 
 void CommandTransformTranslate::Execute()
 {
     translate();
 }
 
+
 void CommandTransformTranslate::translate()
 {
-    QPoint startPoint = GetStartPoint();
-    QPoint endPoint= GetEndPoint();
-
-    QVector3D worldStart = convertWorldToScreen(startPoint);
-    QVector3D worldEnd = convertWorldToScreen(endPoint);
-
-    QVector3D moveAmount = worldEnd - worldStart;
+    QVector3D moveAmount = endWorldPosition - startWorldPosition;
     moveAmount.setY(moveAmount.y() * -1.0f);
 
-    QMatrix4x4 updateMatrix;
-    updateMatrix.translate(moveAmount);
-    setUpdateMatrix(updateMatrix);
+    QMatrix4x4 translateMatrix;
+    translateMatrix.translate(moveAmount);
+
+    updateMatrix = translateMatrix;
 }

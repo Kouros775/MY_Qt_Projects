@@ -1,14 +1,12 @@
 #include "renderer.h"
-#include <Qt3DRender>
 #include <Qt3DExtras>
+#include <Qt3DRender>
 #include <Qt3DCore/QEntity>
 
-
+#include "Command/Transform/commandtransformtranslate.h"
+#include "Render/meshmodel.h"
 #include "Render/renderbase.h"
 #include "Render/rendercamera.h"
-#include "Render/meshmodel.h"
-
-#include "renderer.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,9 +18,12 @@ Renderer::Renderer(QObject *parent)
     , rootEntity(nullptr)
     , camera(nullptr)
     , renderBase(nullptr)
+    , commandTranslate(nullptr)
 {
     renderBase = new RenderBase(this);
     camera = new RenderCamera(this);
+
+    commandTranslate = new CommandTransformTranslate(this);
 }
 
 
@@ -31,7 +32,6 @@ Renderer::Renderer(QObject *parent)
 ///
 Renderer::~Renderer()
 {
-    qDebug() <<__FUNCTION__;
 }
 
 
@@ -42,21 +42,14 @@ Renderer::~Renderer()
 Qt3DCore::QEntity* Renderer::Initialize(Qt3DRender::QCamera* paramCamera)
 {
     rootEntity = renderBase->Initialize();
-    initializeLight();
+    //initializeLight();
 
 
 
-    //Qt3DRender::QDirectionalLight* directionLight = new Qt3DRender::QDirectionalLight(rootEntity);
-    //directionLight->setWorldDirection(QVector3D(0.0f, 1.0f, 0.0f));
+    Qt3DRender::QDirectionalLight* directionLight = new Qt3DRender::QDirectionalLight(rootEntity);
+    directionLight->setWorldDirection(QVector3D(0.0f, 0.0f, -1.0f));
     //directionLight->setIntensity(10.0f);
-    //rootEntity->addComponent(directionLight);
-
-
-    Qt3DRender::QObjectPicker* picker = new Qt3DRender::QObjectPicker(rootEntity);
-    QObject::connect(picker, &Qt3DRender::QObjectPicker::pressed, this, &Renderer::pressed);
-    QObject::connect(picker, &Qt3DRender::QObjectPicker::moved, this, &Renderer::moved);
-    rootEntity->addComponent(picker);
-
+    rootEntity->addComponent(directionLight);
 
     camera  = new RenderCamera();
     camera->Initialize(paramCamera, rootEntity);
@@ -98,6 +91,15 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
     material->setShininess(3.0f);
     model->addComponent(material);
     // << material
+
+    // >> Picker
+    Qt3DRender::QObjectPicker* picker = new Qt3DRender::QObjectPicker(model);
+    picker->setDragEnabled(true);
+    QObject::connect(picker, &Qt3DRender::QObjectPicker::pressed, this, &Renderer::pressed);
+    QObject::connect(picker, &Qt3DRender::QObjectPicker::moved, this, &Renderer::moved);
+    //QObject::connect(picker, &Qt3DRender::QObjectPicker::entered, this, &Renderer::moved);
+    model->addComponent(picker);
+    // << Picker
 
     bRes = renderBase->AddModel(paramIndex, model);
 
@@ -157,22 +159,20 @@ bool Renderer::SelectModel(const int &paramIndex)
     return bRes;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief Renderer::Translate
-/// \param paramIndex
-/// \param startPoint
-/// \param endPoint
-/// \return
-///
-bool Renderer::Translate(const int &paramIndex, const QPoint& startPoint, const QPoint& endPoint)
+bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const QVector3D &endPos) const
 {
     bool bRes = false;
 
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {
-        //Qt3DCore::QTransform* transform = model->GetTransform();
+        Qt3DCore::QTransform* transform = model->GetTransform();
+
+        QVector3D currentPosition = transform->translation();
+        QVector3D moveAmount = endPos - startPos;
+        moveAmount.setZ(0.0f);
+
+        transform->setTranslation(currentPosition + moveAmount);
     }
     else
     {
@@ -182,22 +182,22 @@ bool Renderer::Translate(const int &paramIndex, const QPoint& startPoint, const 
     return bRes;
 }
 
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \brief Renderer::Rotate
-/// \param paramIndex
-/// \param startPoint
-/// \param endPoint
-/// \return
-///
-bool Renderer::Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint)
+bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, const QVector3D &endPos) const
 {
     bool bRes = false;
 
-    MeshModel* model = GetModel(paramIndex);
-    if(nullptr != model)
+    if(nullptr != paramModel)
     {
-        //Qt3DCore::QTransform* transform = model->GetTransform();
+        Qt3DCore::QTransform* transform = paramModel->GetTransform();
+
+        QVector3D rotateAxis = QVector3D::crossProduct(startPos, endPos);
+
+        float rotateDegree = 5.0f;
+
+        QMatrix4x4 rotateMatrix;
+        rotateMatrix.rotate(rotateDegree, rotateAxis);
+
+        transform->setMatrix(rotateMatrix * transform->matrix());
     }
     else
     {
@@ -206,6 +206,7 @@ bool Renderer::Rotate(const int& paramIndex, const QPoint& startPoint, const QPo
 
     return bRes;
 }
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,6 +243,31 @@ bool Renderer::Scale(const int& paramIndex, const QPoint& startPoint, const QPoi
 MeshModel *Renderer::GetModel(const int &paramIndex) const
 {
     return renderBase->GetModel(paramIndex);
+}
+
+
+void Renderer::pressed(Qt3DRender::QPickEvent *pick)
+{
+    QVector3D start = pick->worldIntersection();
+    startWorldPosition = start;
+}
+
+void Renderer::moved(Qt3DRender::QPickEvent *pick)
+{
+    QVector3D world = pick->worldIntersection();
+    MeshModel* pickModel = qobject_cast<MeshModel*>(sender()->parent());
+    int index = pickModel->GetIndex();
+
+    if(Qt3DRender::QPickEvent::Buttons::LeftButton & pick->buttons())
+    {
+        Translate(index, startWorldPosition, world);
+    }
+    else if(Qt3DRender::QPickEvent::Buttons::RightButton & pick->buttons())
+    {
+        Rotate(pickModel, startWorldPosition, world);
+    }
+
+    startWorldPosition = world;
 }
 
 void Renderer::initializeLight()
@@ -315,15 +341,4 @@ void Renderer::initializeLight()
     }
     //// << light
 
-}
-
-
-void Renderer::pressed(Qt3DRender::QPickEvent *pick)
-{
-    qDebug() <<__FUNCTION__;
-}
-
-void Renderer::moved(Qt3DRender::QPickEvent *pick)
-{
-    qDebug() <<__FUNCTION__;
 }

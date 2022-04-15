@@ -2,9 +2,7 @@
 #define RENDERER_H
 
 #include <QObject>
-
-#define SAFE_DELETE(x)			if(x){delete x;x=nullptr;}
-#define SAFE_DELETE_ARRAY(x)	if(x){delete[] x;x=nullptr;}
+#include <QVector3D>
 
 
 namespace Qt3DCore
@@ -22,6 +20,8 @@ namespace Qt3DRender
 class RenderCamera;
 class RenderBase;
 class MeshModel;
+class CommandTransformTranslate;
+
 
 class Renderer : public QObject
 {
@@ -36,24 +36,26 @@ public:
     bool RemoveModel(const int& paramIndex);
     bool SelectModel(const int& paramIndex);
 
-    bool Translate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
-    bool Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
+    bool Translate(const int& paramIndex, const QVector3D& startPos, const QVector3D& endPos) const;
+    bool Rotate(const MeshModel* paramModel, const QVector3D& startPos, const QVector3D& endPos) const;
     bool Scale(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
 
     MeshModel* GetModel(const int& paramIndex) const;
 
-private:
-    void initializeLight();
-
-
 private slots:
     void pressed(Qt3DRender::QPickEvent *pick);
     void moved(Qt3DRender::QPickEvent *pick);
+private:
+    void initializeLight();
 
 private:
     Qt3DCore::QEntity*      rootEntity;
     RenderCamera*           camera;
     RenderBase*             renderBase;
+
+    CommandTransformTranslate*      commandTranslate;
+
+    QVector3D           startWorldPosition;
 };
 
 #endif // RENDERER_H

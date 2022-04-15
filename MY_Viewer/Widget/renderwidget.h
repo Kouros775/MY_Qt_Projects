@@ -1,15 +1,10 @@
 #ifndef RENDERWIDGET_H
 #define RENDERWIDGET_H
 
-
 #include <QWidget>
 
 
 class RenderWindow;
-namespace Qt3DRender
-{
-    class QMesh;
-}
 
 
 class RenderWidget : public QWidget

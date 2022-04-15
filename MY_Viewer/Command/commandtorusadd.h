@@ -1,33 +1,32 @@
-#ifndef COMMANDLOADMODEL_H
-#define COMMANDLOADMODEL_H
+#ifndef COMMANDTORUSADD_H
+#define COMMANDTORUSADD_H
 
 #include "Command/icommand.h"
 
 
 namespace Qt3DRender
 {
-    class QMesh;
     class QGeometryRenderer;
 }
 class QListWidget;
 
 
-class CommandLoadModel : public ICommand
+class CommandTorusAdd : public ICommand
 {
     Q_OBJECT
 public:
-    explicit CommandLoadModel(QObject *parent=nullptr);
-    ~CommandLoadModel() override;
+    explicit CommandTorusAdd(QObject *parent=nullptr);
+    ~CommandTorusAdd() override;
     void Execute() override;
 
     void SetListWidget(QListWidget* param){this->listWidget = param;}
 
 signals:
-    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
+    void AddModel(const int& paramIndex, Qt3DRender::QGeometryRenderer* paramMesh);
 
 private:
     QListWidget*    listWidget;
     int             currentIndex;
 };
 
-#endif // COMMANDLOADMODEL_H
+#endif // COMMANDTORUSADD_H
