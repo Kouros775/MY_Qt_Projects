@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class CommandRemoveModel;
 class CommandLoadModel;
 class RenderWidget;
 class QListWidget;
@@ -25,26 +26,23 @@ private:
     void addToolBarActions();
     void addListWidget();
     void addRenderWidget();
-    void addTorus();
     void addCommands();
-    void connectSignalSlot();
+
 private slots:
-    void newScene();
-    void loadModel(Qt3DRender::QMesh* paramMesh);
-    void deleteModel();
+
 
     void itemPressed(QListWidgetItem *item);
 
 signals:
-    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
-    void RemoveModel(const int& paramIndex);
     void SelectModel(const int& paramindex);
+
 private:
     RenderWidget*   renderWidget;
     QListWidget*    listWidget;
-    int             currentIndex;
+
 
     CommandLoadModel*       commandLoadModel;
+    CommandRemoveModel*     commandRemoveModel;
 };
 
 #endif // MAINWINDOW_H

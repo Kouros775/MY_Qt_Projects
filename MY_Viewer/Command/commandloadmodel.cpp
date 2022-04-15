@@ -3,10 +3,15 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <Qt3DRender/QMesh>
+#include "Widget/modellistwidgetitem.h"
+
+
+#define IMAGE_PATH_MODEL_WIDGET_ITEM    "://images/model_image.png"
 
 
 CommandLoadModel::CommandLoadModel(QObject *parent)
     : ICommand(parent)
+    , currentIndex(1)
 {
 
 }
@@ -32,5 +37,14 @@ void CommandLoadModel::Execute()
     loadMesh->setMeshName(meshName);
     loadMesh->setSource(urlPath);
 
-    emit SignalLoadModel(loadMesh);
+    QString itemText = QString::number(currentIndex) + " : " + loadMesh->meshName();
+
+    ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
+    item->SetIndex(currentIndex);
+    item->SetName(loadMesh->meshName());
+
+    listWidget->addItem(item);
+
+    emit AddModel(currentIndex, loadMesh);
+    currentIndex++;
 }

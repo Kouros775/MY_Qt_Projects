@@ -3,10 +3,12 @@
 
 #include "Command/icommand.h"
 
+
 namespace Qt3DRender
 {
     class QMesh;
 }
+class QListWidget;
 
 
 class CommandLoadModel : public ICommand
@@ -15,13 +17,16 @@ class CommandLoadModel : public ICommand
 public:
     explicit CommandLoadModel(QObject *parent=nullptr);
     ~CommandLoadModel() override;
-
-public:
     void Execute() override;
 
+    void SetListWidget(QListWidget* param){this->listWidget = param;}
 
 signals:
-    void SignalLoadModel(Qt3DRender::QMesh* paramMesh);
+    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
+
+private:
+    QListWidget*    listWidget;
+    int             currentIndex;
 };
 
 #endif // COMMANDLOADMODEL_H

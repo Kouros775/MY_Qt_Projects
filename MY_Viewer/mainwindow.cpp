@@ -10,7 +10,9 @@
 
 #include <Qt3DRender/QMesh>
 
+#include "Command/commandremovemodel.h"
 #include "Command/commandloadmodel.h"
+
 #include "Widget/modellistwidgetitem.h"
 #include "Widget/renderwidget.h"
 #include "Widget/renderwindow.h"
@@ -19,22 +21,20 @@
 #define IMAGE_PATH_NEW_ACTION          "://images/new.png"
 #define IMAGE_PATH_OPEN_ACTION          ":/images/open.png"
 #define IMAGE_PATH_DELETE_ACTION        "://images/model_delete.png"
-#define IMAGE_PATH_MODEL_WIDGET_ITEM    "://images/model_image.png"
+
 #define IMAGE_PATH_MODEL_ADD_TORUS      "://images/model_torus.png"
 
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , renderWidget(nullptr)
-    , currentIndex(1)
     , commandLoadModel(nullptr)
+    , commandRemoveModel(nullptr)
 {
     addRenderWidget();
+    addListWidget();
     addCommands();
     addToolBarActions();
-    addListWidget();
-
-    connectSignalSlot();
 }
 
 MainWindow::~MainWindow()
@@ -52,7 +52,6 @@ void MainWindow::addToolBarActions()
     newAct = new QAction(QIcon(IMAGE_PATH_NEW_ACTION), tr("New Scene"), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("New Scene"));
-    connect(newAct, &QAction::triggered, this, &MainWindow::newScene);
     fileMenu->addAction(newAct);
 
     QAction* openAct;
@@ -60,6 +59,7 @@ void MainWindow::addToolBarActions()
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Load Model File"));
     connect(openAct, &QAction::triggered, commandLoadModel, &CommandLoadModel::Execute);
+    connect(commandLoadModel, &CommandLoadModel::AddModel, renderWindow, &RenderWindow::AddModel);
     fileMenu->addAction(openAct);
 
 
@@ -67,8 +67,8 @@ void MainWindow::addToolBarActions()
     deleteAct = new QAction(QIcon(IMAGE_PATH_DELETE_ACTION), tr("&Delete"), this);
     deleteAct->setShortcuts(QKeySequence::Delete);
     deleteAct->setStatusTip(tr("Delete Model File"));
-    connect(deleteAct, &QAction::triggered, this, &MainWindow::deleteModel);
-    connect(this, &MainWindow::RemoveModel, renderWindow, &RenderWindow::RemoveModel);
+    connect(deleteAct, &QAction::triggered, commandRemoveModel, &CommandRemoveModel::Execute);
+    connect(commandRemoveModel, &CommandRemoveModel::RemoveModel, renderWindow, &RenderWindow::RemoveModel);
     fileMenu->addAction(deleteAct);
 
     QToolBar* fileToolBar;
@@ -82,7 +82,7 @@ void MainWindow::addToolBarActions()
     QAction* addTorus;
     addTorus = new QAction(QIcon(IMAGE_PATH_MODEL_ADD_TORUS), tr("&Add Torus"), this);
     addTorus->setStatusTip(tr("Add Torus Model"));
-    connect(deleteAct, &QAction::triggered, this, &MainWindow::deleteModel);
+    //connect(deleteAct, &QAction::triggered, this, &MainWindow::deleteModel);
     ModelMenu->addAction(addTorus);
 
     // << Model
@@ -109,87 +109,20 @@ void MainWindow::addRenderWidget()
 }
 
 
-void MainWindow::newScene()
-{
-    qDebug() << __FUNCTION__;
-}
-
-
-void MainWindow::loadModel(Qt3DRender::QMesh* paramMesh)
-{
-    QString itemText = QString::number(currentIndex) + " : " + paramMesh->meshName();
-
-    ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
-    item->SetIndex(currentIndex);
-    item->SetName(paramMesh->meshName());
-
-    listWidget->addItem(item);
-
-    emit AddModel(currentIndex, paramMesh);
-    currentIndex++;
-}
-
-
-void MainWindow::deleteModel()
-{
-    QListWidgetItem* removeItem = listWidget->takeItem(listWidget->currentRow());
-
-    if(removeItem)
-    {
-        ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(removeItem);
-        emit RemoveModel(modelItem->GetIndex());
-        delete modelItem;
-    }
-}
-
-
 void MainWindow::itemPressed(QListWidgetItem *item)
 {
     ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(item);
     emit SelectModel(modelItem->GetIndex());
 }
 
-#include <Qt3DExtras/QTorusMesh>
-void MainWindow::addTorus()
-{
-    Qt3DExtras::QTorusMesh* torusMesh = new Qt3DExtras::QTorusMesh();
-    torusMesh->setRings(5);
-    torusMesh->setRadius(5);
-    torusMesh->setSlices(10);
-    torusMesh->setMinorRadius(5);
-
-
-    QString meshName = "torus";
-
-    //torusMesh->setMeshName(meshName);
-
-    QString itemText = QString::number(currentIndex) + " : " + meshName;
-
-    ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
-    item->SetIndex(currentIndex);
-    item->SetName(meshName);
-
-    listWidget->addItem(item);
-
-    //emit AddModel(currentIndex, torusMesh);
-    currentIndex++;
-}
-
 
 void MainWindow::addCommands()
 {
     commandLoadModel = new CommandLoadModel(this);
-}
+    commandRemoveModel = new CommandRemoveModel(this);
 
-void MainWindow::connectSignalSlot()
-{
-    // >> LoadModel
-    RenderWindow* renderWindow = renderWidget->GetRenderWindow();
-    connect(commandLoadModel, &CommandLoadModel::SignalLoadModel, this, &MainWindow::loadModel);
-    connect(this, &MainWindow::AddModel, renderWindow, &RenderWindow::AddModel);
-    // << LoadModel
-
-
+    commandLoadModel->SetListWidget(listWidget);
+    commandRemoveModel->SetListWidget(listWidget);
 }
 
 
