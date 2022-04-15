@@ -102,3 +102,8 @@ MeshModel *RenderBase::GetModel(const int &paramIndex) const
 
     return model;
 }
+
+QMap<int, MeshModel *> *RenderBase::GetModelMap()
+{
+    return &modelMap;
+}

@@ -124,6 +124,22 @@ bool Renderer::SelectModel(const int &paramIndex)
 {
     bool bRes = false;
 
+    QMap<int, MeshModel*>* modelMap = renderBase->GetModelMap();
+    QMap<int, MeshModel*>::iterator iter = modelMap->begin();
+    for(iter ; iter != modelMap->end() ; iter++)
+    {
+         MeshModel* model = GetModel(iter.key());
+
+         if(nullptr != model)
+         {
+             Qt3DExtras::QPhongMaterial* material = model->GetMaterial();
+             QColor color(100, 100, 100);
+             material->setDiffuse(color);
+             material->setSpecular(color);
+             material->setAmbient(color);
+         }
+    }
+
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {

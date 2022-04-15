@@ -27,10 +27,11 @@ public:
     bool IsEmptyIndex(const int& paramIndex) const;
 
     MeshModel* GetModel(const int& paramIndex) const;
+    QMap<int, MeshModel*>* GetModelMap();
 
 private:
     Qt3DCore::QEntity*                  rootEntity;
-    QMap<int, MeshModel*>       modelMap;
+    QMap<int, MeshModel*>               modelMap;
 };
 
 #endif // RENDERBASE_H
