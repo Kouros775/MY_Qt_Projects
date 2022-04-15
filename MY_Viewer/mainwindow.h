@@ -2,7 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <memory>
 
+using namespace std;
 
 class RenderWidget;
 class QListWidget;
@@ -28,8 +30,9 @@ private slots:
 
     void itemPressed(QListWidgetItem *item);
 private:
-    RenderWidget*  renderWidget;
+    shared_ptr<RenderWidget>  renderWidget;
     QListWidget*   listWidget;
+    int             currentIndex;
 };
 
 #endif // MAINWINDOW_H

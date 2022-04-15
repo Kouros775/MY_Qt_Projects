@@ -1,6 +1,6 @@
 #include "renderwidget.h"
 #include <QLayout>
-
+#include <QDebug>
 #include "Render/rendercamera.h"
 #include "Widget/renderwindow.h"
 
@@ -9,9 +9,9 @@ RenderWidget::RenderWidget(QWidget *parent)
     : QWidget(parent)
     , renderWindow(nullptr)
 {
-    renderWindow = new RenderWindow();
+    renderWindow = make_shared<RenderWindow>();
 
-    QWidget *container = QWidget::createWindowContainer(renderWindow);
+    QWidget *container = QWidget::createWindowContainer(renderWindow.get());
 
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(container);
@@ -21,7 +21,7 @@ RenderWidget::RenderWidget(QWidget *parent)
 
 RenderWidget::~RenderWidget()
 {
-
+    qDebug() <<__FUNCTION__;
 }
 
 QSize RenderWidget::sizeHint() const

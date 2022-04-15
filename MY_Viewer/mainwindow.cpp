@@ -12,7 +12,6 @@
 #include <QStandardPaths>
 #include <Qt3DRender/QMesh>
 
-#include "Document/modeldocument.h"
 #include "Widget/modellistwidgetitem.h"
 #include "Widget/renderwidget.h"
 
@@ -27,6 +26,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , renderWidget(nullptr)
+    , currentIndex(0)
 {
     addWidgets();
 
@@ -38,10 +38,9 @@ MainWindow::MainWindow(QWidget *parent)
     dock->setWidget(listWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 
-    renderWidget = new RenderWidget();
 
-    setCentralWidget(renderWidget);
-
+    renderWidget = make_shared<RenderWidget>();
+    setCentralWidget(renderWidget.get());
     statusBar()->showMessage(tr("Ready"));
 }
 
@@ -108,31 +107,21 @@ void MainWindow::loadModel()
     loadMesh->setMeshName(meshName);
     loadMesh->setSource(urlPath);
 
-    ModelDocument& modelDocument = ModelDocument::Instance();
-    int index = modelDocument.AddModel(loadMesh);
-    modelDocument.SetSelectedIndex(index);
-
-
-    QString itemText = QString::number(index) + " : " + meshName;
+    QString itemText = QString::number(currentIndex) + " : " + meshName;
 
     ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
-    item->SetIndex(index);
+    item->SetIndex(currentIndex);
     item->SetName(meshName);
 
     listWidget->addItem(item);
-    renderWidget->AddModel(index, loadMesh);
+    renderWidget->AddModel(currentIndex, loadMesh);
+    currentIndex++;
 }
 
 
 void MainWindow::deleteModel()
 {
-    ModelDocument& modelDocument = ModelDocument::Instance();
-    int selectedIndex = modelDocument.GetSelectedIndex();
-    modelDocument.SetSelectedIndex(0);
-
-    renderWidget->RemoveModel(selectedIndex);
-
-
+    renderWidget->RemoveModel(currentIndex);
     listWidget->takeItem(listWidget->currentRow());
 }
 
@@ -140,10 +129,7 @@ void MainWindow::deleteModel()
 void MainWindow::itemPressed(QListWidgetItem *item)
 {
     ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(item);
-
-    ModelDocument& modelDocument = ModelDocument::Instance();
-    modelDocument.SetSelectedIndex(modelItem->GetIndex());
-    qDebug() << modelItem->GetIndex() <<" : " << modelItem->GetName();
+    currentIndex = modelItem->GetIndex();
 }
 
 

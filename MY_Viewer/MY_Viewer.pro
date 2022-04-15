@@ -24,7 +24,6 @@ SOURCES += \
     Widget/renderwidget.cpp \
     Render/rendercamera.cpp \
     Widget/renderwindow.cpp \
-    Document/modeldocument.cpp \
     Widget/modellistwidgetitem.cpp
 
 HEADERS += \
@@ -40,7 +39,6 @@ HEADERS += \
     Widget/renderwidget.h \
     Render/rendercamera.h \
     Widget/renderwindow.h \
-    Document/modeldocument.h \
     Widget/modellistwidgetitem.h
 
 

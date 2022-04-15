@@ -3,6 +3,10 @@
 
 
 #include <QWidget>
+#include <memory>
+
+
+using namespace std;
 
 
 class RenderWindow;
@@ -19,12 +23,12 @@ public:
     explicit RenderWidget(QWidget *parent = nullptr);
     ~RenderWidget() override;
 
-    QSize sizeHint() const;
+    QSize sizeHint() const override;
 
     void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     void RemoveModel(const int& paramIndex);
 private:
-    RenderWindow* renderWindow;
+    shared_ptr<RenderWindow> renderWindow;
 };
 
 #endif // RENDERWIDGET_H
