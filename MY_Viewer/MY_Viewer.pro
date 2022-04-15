@@ -26,7 +26,8 @@ SOURCES += \
     Widget/renderwindow.cpp \
     Widget/modellistwidgetitem.cpp \
     Command/commandloadmodel.cpp \
-    Command/commandremovemodel.cpp
+    Command/commandremovemodel.cpp \
+    Command/commandselectlistwidgetitem.cpp
 
 HEADERS += \
     Render/meshmodel.h \
@@ -43,7 +44,8 @@ HEADERS += \
     Widget/renderwindow.h \
     Widget/modellistwidgetitem.h \
     Command/commandloadmodel.h \
-    Command/commandremovemodel.h
+    Command/commandremovemodel.h \
+    Command/commandselectlistwidgetitem.h
 
 
 # Default rules for deployment.

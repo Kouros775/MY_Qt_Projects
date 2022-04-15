@@ -10,6 +10,7 @@
 
 #include <Qt3DRender/QMesh>
 
+#include "Command/commandselectlistwidgetitem.h"
 #include "Command/commandremovemodel.h"
 #include "Command/commandloadmodel.h"
 
@@ -30,17 +31,23 @@ MainWindow::MainWindow(QWidget *parent)
     , renderWidget(nullptr)
     , commandLoadModel(nullptr)
     , commandRemoveModel(nullptr)
+    , commandSelectWidgetItem(nullptr)
 {
     addRenderWidget();
     addListWidget();
     addCommands();
     addToolBarActions();
+
+    RenderWindow* renderWindow = renderWidget->GetRenderWindow();
+    connect(listWidget, &QListWidget::itemPressed, commandSelectWidgetItem, &CommandSelectListWidgetItem::ItemPressed);
+    connect(commandSelectWidgetItem, &CommandSelectListWidgetItem::SelectModel, renderWindow, &RenderWindow::SelectModel);
 }
+
 
 MainWindow::~MainWindow()
 {
-    qDebug() <<__FUNCTION__;
 }
+
 
 void MainWindow::addToolBarActions()
 {
@@ -90,14 +97,10 @@ void MainWindow::addToolBarActions()
 
 void MainWindow::addListWidget()
 {
-    RenderWindow* renderWindow = renderWidget->GetRenderWindow();
-
     QDockWidget* dock = new QDockWidget(tr("Model List"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
     listWidget = new QListWidget(dock);
-    connect(listWidget, &QListWidget::itemPressed, this, &MainWindow::itemPressed);
-    connect(this, &MainWindow::SelectModel, renderWindow, &RenderWindow::SelectModel);
     dock->setWidget(listWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
 }
@@ -109,15 +112,9 @@ void MainWindow::addRenderWidget()
 }
 
 
-void MainWindow::itemPressed(QListWidgetItem *item)
-{
-    ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(item);
-    emit SelectModel(modelItem->GetIndex());
-}
-
-
 void MainWindow::addCommands()
 {
+    commandSelectWidgetItem = new CommandSelectListWidgetItem(this);
     commandLoadModel = new CommandLoadModel(this);
     commandRemoveModel = new CommandRemoveModel(this);
 

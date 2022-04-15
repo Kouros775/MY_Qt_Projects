@@ -3,16 +3,13 @@
 
 #include <QMainWindow>
 
+
+class CommandSelectListWidgetItem;
 class CommandRemoveModel;
 class CommandLoadModel;
 class RenderWidget;
 class QListWidget;
-class QListWidgetItem;
-namespace Qt3DRender
-{
-    class QGeometryRenderer;
-    class QMesh;
-}
+
 
 class MainWindow : public QMainWindow
 {
@@ -28,21 +25,14 @@ private:
     void addRenderWidget();
     void addCommands();
 
-private slots:
-
-
-    void itemPressed(QListWidgetItem *item);
-
-signals:
-    void SelectModel(const int& paramindex);
-
 private:
     RenderWidget*   renderWidget;
     QListWidget*    listWidget;
 
 
-    CommandLoadModel*       commandLoadModel;
-    CommandRemoveModel*     commandRemoveModel;
+    CommandLoadModel*               commandLoadModel;
+    CommandRemoveModel*             commandRemoveModel;
+    CommandSelectListWidgetItem*    commandSelectWidgetItem;
 };
 
 #endif // MAINWINDOW_H
