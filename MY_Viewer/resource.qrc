@@ -8,5 +8,6 @@
         <file>images/save.png</file>
         <file>images/model_image.png</file>
         <file>images/model_delete.png</file>
+        <file>images/model_torus.png</file>
     </qresource>
 </RCC>

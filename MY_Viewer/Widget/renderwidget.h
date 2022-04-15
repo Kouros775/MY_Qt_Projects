@@ -3,10 +3,6 @@
 
 
 #include <QWidget>
-#include <memory>
-
-
-using namespace std;
 
 
 class RenderWindow;
@@ -25,10 +21,11 @@ public:
 
     QSize sizeHint() const override;
 
-    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
-    void RemoveModel(const int& paramIndex);
+    RenderWindow* GetRenderWindow() const {return renderWindow;}
+
+
 private:
-    shared_ptr<RenderWindow> renderWindow;
+    RenderWindow* renderWindow;
 };
 
 #endif // RENDERWIDGET_H

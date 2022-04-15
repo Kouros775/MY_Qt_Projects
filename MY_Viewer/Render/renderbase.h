@@ -19,6 +19,7 @@ class RenderBase : public QObject
     Q_OBJECT
 public:
     explicit RenderBase(QObject *parent = nullptr);
+    ~RenderBase();
     Qt3DCore::QEntity* Initialize();
 
     bool AddModel(const int& paramIndex, MeshModel* paramModel);

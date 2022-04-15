@@ -21,8 +21,8 @@ Renderer::Renderer(QObject *parent)
     , camera(nullptr)
     , renderBase(nullptr)
 {
-    renderBase = new RenderBase();
-    camera = new RenderCamera();
+    renderBase = new RenderBase(this);
+    camera = new RenderCamera(this);
 }
 
 
@@ -31,8 +31,7 @@ Renderer::Renderer(QObject *parent)
 ///
 Renderer::~Renderer()
 {
-    SAFE_DELETE(renderBase);
-    SAFE_DELETE(camera);
+    qDebug() <<__FUNCTION__;
 }
 
 
@@ -121,6 +120,27 @@ bool Renderer::RemoveModel(const int &paramIndex)
     return bRes;
 }
 
+bool Renderer::SelectModel(const int &paramIndex)
+{
+    bool bRes = false;
+
+    MeshModel* model = GetModel(paramIndex);
+    if(nullptr != model)
+    {
+        Qt3DExtras::QPhongMaterial* material = model->GetMaterial();
+        QColor color(200, 100, 100);
+        material->setDiffuse(color);
+        material->setSpecular(color);
+        material->setAmbient(color);
+    }
+    else
+    {
+
+    }
+
+    return bRes;
+}
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /// \brief Renderer::Translate
@@ -136,10 +156,7 @@ bool Renderer::Translate(const int &paramIndex, const QPoint& startPoint, const 
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {
-        Qt3DCore::QTransform* transform = model->GetTransform();
-        //transform->set
-
-        QVector3D startPos(startPoint);
+        //Qt3DCore::QTransform* transform = model->GetTransform();
     }
     else
     {
@@ -164,10 +181,7 @@ bool Renderer::Rotate(const int& paramIndex, const QPoint& startPoint, const QPo
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {
-        Qt3DCore::QTransform* transform = model->GetTransform();
-        QVector3D pos;
-
-        //transform->set
+        //Qt3DCore::QTransform* transform = model->GetTransform();
     }
     else
     {
@@ -192,7 +206,7 @@ bool Renderer::Scale(const int& paramIndex, const QPoint& startPoint, const QPoi
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {
-        Qt3DCore::QTransform* transform = model->GetTransform();
+        //Qt3DCore::QTransform* transform = model->GetTransform();
         //transform->set
     }
     else

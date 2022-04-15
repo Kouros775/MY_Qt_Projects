@@ -2,8 +2,7 @@
 #define RENDERWINDOW_H
 
 #include <Qt3DExtras/Qt3DWindow>
-#include <memory>
-
+#include <QObject>
 
 class Renderer;
 namespace Qt3DRender
@@ -12,17 +11,15 @@ namespace Qt3DRender
 }
 
 
-
 class RenderWindow : public Qt3DExtras::Qt3DWindow
 {
+    Q_OBJECT
 public:
     explicit RenderWindow(QScreen *screen = nullptr);
     ~RenderWindow() override;
 
     void Initialize();
 
-    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
-    void RemoveModel(const int& paramIndex);
 
     // QWindow interface
 protected:
@@ -31,8 +28,12 @@ protected:
     void mouseMoveEvent(QMouseEvent* event) override;
 
 
+public slots:
+    void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
+    void RemoveModel(const int& paramIndex);
+    void SelectModel(const int& paramIndex);
 private:
-    std::shared_ptr<Renderer> renderer;
+    Renderer* renderer;
 };
 
 #endif // RENDERWINDOW_H

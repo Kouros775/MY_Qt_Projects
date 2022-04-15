@@ -15,6 +15,7 @@ RenderCamera::RenderCamera(QObject *parent)
 
 RenderCamera::~RenderCamera()
 {
+    qDebug() <<__FUNCTION__;
 }
 
 void RenderCamera::Initialize(Qt3DRender::QCamera* paramCamera, Qt3DCore::QEntity* paramRootEntity)

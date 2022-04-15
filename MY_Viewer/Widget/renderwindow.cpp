@@ -11,19 +11,20 @@
 RenderWindow::RenderWindow(QScreen *screen)
     : Qt3DExtras::Qt3DWindow(screen)
 {
-    defaultFrameGraph()->setClearColor(QColor(77, 77, 77));
+    defaultFrameGraph()->setClearColor(QColor(200, 200, 200));
     Initialize();
 }
 
 
 RenderWindow::~RenderWindow()
 {
+    qDebug() <<__FUNCTION__;
 }
 
 
 void RenderWindow::Initialize()
 {
-    renderer = std::make_shared<Renderer>();
+    renderer = new Renderer(this);
     Qt3DCore::QEntity* rootEntity = renderer->Initialize(this->camera());
 
     setRootEntity(rootEntity);
@@ -40,15 +41,24 @@ void RenderWindow::RemoveModel(const int &paramIndex)
     renderer->RemoveModel(paramIndex);
 }
 
+void RenderWindow::SelectModel(const int &paramIndex)
+{
+    renderer->SelectModel(paramIndex);
+}
+
 
 void RenderWindow::mousePressEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 }
+
 
 void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 }
 
 void RenderWindow::mouseMoveEvent(QMouseEvent *event)
 {
+    Q_UNUSED(event);
 }

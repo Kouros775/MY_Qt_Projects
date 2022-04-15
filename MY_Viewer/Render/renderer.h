@@ -34,6 +34,7 @@ public:
 
     bool AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     bool RemoveModel(const int& paramIndex);
+    bool SelectModel(const int& paramIndex);
 
     bool Translate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);
     bool Rotate(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint);

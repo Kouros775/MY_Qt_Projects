@@ -13,6 +13,11 @@ RenderBase::RenderBase(QObject *parent)
 
 }
 
+RenderBase::~RenderBase()
+{
+    qDebug() <<__FUNCTION__;
+}
+
 Qt3DCore::QEntity* RenderBase::Initialize()
 {
     rootEntity = new Qt3DCore::QEntity();
