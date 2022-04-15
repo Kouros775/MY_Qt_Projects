@@ -7,11 +7,10 @@
 #include <QStatusBar>
 #include <QListWidget>
 #include <QDockWidget>
-#include <QFileDialog>
-#include <QApplication>
-#include <QStandardPaths>
+
 #include <Qt3DRender/QMesh>
 
+#include "Command/commandloadmodel.h"
 #include "Widget/modellistwidgetitem.h"
 #include "Widget/renderwidget.h"
 #include "Widget/renderwindow.h"
@@ -28,10 +27,14 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , renderWidget(nullptr)
     , currentIndex(1)
+    , commandLoadModel(nullptr)
 {
     addRenderWidget();
+    addCommands();
     addToolBarActions();
     addListWidget();
+
+    connectSignalSlot();
 }
 
 MainWindow::~MainWindow()
@@ -56,8 +59,7 @@ void MainWindow::addToolBarActions()
     openAct = new QAction(QIcon(IMAGE_PATH_OPEN_ACTION), tr("Open"), this);
     openAct->setShortcuts(QKeySequence::Open);
     openAct->setStatusTip(tr("Load Model File"));
-    connect(openAct, &QAction::triggered, this, &MainWindow::loadModel);
-    connect(this, &MainWindow::AddModel, renderWindow, &RenderWindow::AddModel);
+    connect(openAct, &QAction::triggered, commandLoadModel, &CommandLoadModel::Execute);
     fileMenu->addAction(openAct);
 
 
@@ -113,31 +115,17 @@ void MainWindow::newScene()
 }
 
 
-void MainWindow::loadModel()
+void MainWindow::loadModel(Qt3DRender::QMesh* paramMesh)
 {
-    QString path = QFileDialog::getOpenFileName(nullptr
-                                                , "파일 선택"
-                                                , QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)
-                                                , "stl (*.stl) ;; obj (*.obj) ;; ply (*.ply)");
-
-    Qt3DRender::QMesh* loadMesh = new Qt3DRender::QMesh;
-
-    QUrl urlPath = QUrl::fromLocalFile(path);
-
-    QString meshName = path.section("/", -1);
-
-    loadMesh->setMeshName(meshName);
-    loadMesh->setSource(urlPath);
-
-    QString itemText = QString::number(currentIndex) + " : " + meshName;
+    QString itemText = QString::number(currentIndex) + " : " + paramMesh->meshName();
 
     ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
     item->SetIndex(currentIndex);
-    item->SetName(meshName);
+    item->SetName(paramMesh->meshName());
 
     listWidget->addItem(item);
 
-    emit AddModel(currentIndex, loadMesh);
+    emit AddModel(currentIndex, paramMesh);
     currentIndex++;
 }
 
@@ -185,6 +173,23 @@ void MainWindow::addTorus()
 
     //emit AddModel(currentIndex, torusMesh);
     currentIndex++;
+}
+
+
+void MainWindow::addCommands()
+{
+    commandLoadModel = new CommandLoadModel(this);
+}
+
+void MainWindow::connectSignalSlot()
+{
+    // >> LoadModel
+    RenderWindow* renderWindow = renderWidget->GetRenderWindow();
+    connect(commandLoadModel, &CommandLoadModel::SignalLoadModel, this, &MainWindow::loadModel);
+    connect(this, &MainWindow::AddModel, renderWindow, &RenderWindow::AddModel);
+    // << LoadModel
+
+
 }
 
 

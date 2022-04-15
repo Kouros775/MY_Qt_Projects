@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 
-
+class CommandLoadModel;
 class RenderWidget;
 class QListWidget;
 class QListWidgetItem;
@@ -26,9 +26,11 @@ private:
     void addListWidget();
     void addRenderWidget();
     void addTorus();
+    void addCommands();
+    void connectSignalSlot();
 private slots:
     void newScene();
-    void loadModel();
+    void loadModel(Qt3DRender::QMesh* paramMesh);
     void deleteModel();
 
     void itemPressed(QListWidgetItem *item);
@@ -38,9 +40,11 @@ signals:
     void RemoveModel(const int& paramIndex);
     void SelectModel(const int& paramindex);
 private:
-    RenderWidget*  renderWidget;
-    QListWidget*   listWidget;
+    RenderWidget*   renderWidget;
+    QListWidget*    listWidget;
     int             currentIndex;
+
+    CommandLoadModel*       commandLoadModel;
 };
 
 #endif // MAINWINDOW_H
