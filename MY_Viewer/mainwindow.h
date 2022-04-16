@@ -3,10 +3,10 @@
 
 #include <QMainWindow>
 
-
-class CommandSelectListWidgetItem;
-class CommandRemoveModel;
 class CommandLoadModel;
+class CommandRemoveModel;
+class CommandEditModelColor;
+class CommandSelectListWidgetItem;
 class RenderWidget;
 class QListWidget;
 
@@ -31,6 +31,7 @@ private:
     CommandLoadModel*               commandLoadModel;
     CommandRemoveModel*             commandRemoveModel;
     CommandSelectListWidgetItem*    commandSelectWidgetItem;
+    CommandEditModelColor*          commandEditModelColor;
 };
 
 #endif // MAINWINDOW_H

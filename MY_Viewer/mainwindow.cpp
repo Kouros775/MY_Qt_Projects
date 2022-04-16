@@ -7,16 +7,15 @@
 #include <QStatusBar>
 #include <QListWidget>
 #include <QDockWidget>
-
 #include <Qt3DRender/QMesh>
 
-#include "Command/commandselectlistwidgetitem.h"
-#include "Command/commandremovemodel.h"
 #include "Command/commandloadmodel.h"
-
-#include "Widget/modellistwidgetitem.h"
+#include "Command/commandremovemodel.h"
+#include "Command/commandeditmodelcolor.h"
+#include "Command/commandselectlistwidgetitem.h"
 #include "Widget/renderwidget.h"
 #include "Widget/renderwindow.h"
+#include "Widget/modellistwidgetitem.h"
 
 
 #define IMAGE_PATH_NEW_ACTION          "://images/new.png"
@@ -25,6 +24,7 @@
 
 #define IMAGE_PATH_MODEL_ADD_TORUS      "://images/model_torus.png"
 
+#define IMAGE_PATH_EDIT_MODEL_COLOR      "://images/edit_model_color.png"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -32,6 +32,7 @@ MainWindow::MainWindow(QWidget *parent)
     , commandLoadModel(nullptr)
     , commandRemoveModel(nullptr)
     , commandSelectWidgetItem(nullptr)
+    , commandEditModelColor(nullptr)
 {
     addRenderWidget();
     addListWidget();
@@ -93,6 +94,16 @@ void MainWindow::addToolBarActions()
     ModelMenu->addAction(addTorus);
 
     // << Model
+
+
+    // >> Edit Model
+    QMenu* editModelMenu = menuBar()->addMenu(tr("&Edit"));
+    QAction* editModelColor = new QAction(QIcon(IMAGE_PATH_EDIT_MODEL_COLOR), tr("&Edit Color"), this);
+    editModelColor->setStatusTip(tr("Edit Model Color."));
+    editModelMenu->addAction(editModelColor);
+    connect(editModelColor, &QAction::triggered, commandEditModelColor, &CommandEditModelColor::Execute);
+    connect(commandEditModelColor, &CommandEditModelColor::EditModelColor, renderWindow, &RenderWindow::EditModelColor);
+    fileToolBar->addAction(editModelColor);
 }
 
 void MainWindow::addListWidget()
@@ -117,6 +128,7 @@ void MainWindow::addCommands()
     commandSelectWidgetItem = new CommandSelectListWidgetItem(this);
     commandLoadModel = new CommandLoadModel(this);
     commandRemoveModel = new CommandRemoveModel(this);
+    commandEditModelColor = new CommandEditModelColor(this);
 
     commandLoadModel->SetListWidget(listWidget);
     commandRemoveModel->SetListWidget(listWidget);

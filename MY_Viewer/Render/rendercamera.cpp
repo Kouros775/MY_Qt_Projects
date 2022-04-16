@@ -6,7 +6,7 @@
 
 RenderCamera::RenderCamera(QObject *parent)
     : QObject(parent)
-    , camPos(0.0f, 0.0f, 100.0f)
+    , camPos(0.0f, 0.0f, 200.0f)
     , camUpVector(0.0f, 1.0f, 0.0f)
     , camLookAt(0.0f, 0.0f, 0.0f)
     , camera(nullptr)

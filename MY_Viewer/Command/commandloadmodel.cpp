@@ -5,20 +5,20 @@
 #include <Qt3DRender/QMesh>
 #include "Widget/modellistwidgetitem.h"
 
+#include "Document/document.h"
+
 
 #define IMAGE_PATH_MODEL_WIDGET_ITEM    "://images/model_image.png"
 
 
 CommandLoadModel::CommandLoadModel(QObject *parent)
     : ICommand(parent)
-    , currentIndex(1)
+    , listWidget(nullptr)
 {
-
 }
 
 CommandLoadModel::~CommandLoadModel()
 {
-
 }
 
 void CommandLoadModel::Execute()
@@ -28,23 +28,28 @@ void CommandLoadModel::Execute()
                                                 , QStandardPaths::writableLocation(QStandardPaths::DesktopLocation)
                                                 , "stl (*.stl) ;; obj (*.obj) ;; ply (*.ply)");
 
-    Qt3DRender::QMesh* loadMesh = new Qt3DRender::QMesh;
+    if(path.size() > 0)
+    {
+        Qt3DRender::QMesh* loadMesh = new Qt3DRender::QMesh;
 
-    QUrl urlPath = QUrl::fromLocalFile(path);
+        QUrl urlPath = QUrl::fromLocalFile(path);
 
-    QString meshName = path.section("/", -1);
+        QString meshName = path.section("/", -1);
 
-    loadMesh->setMeshName(meshName);
-    loadMesh->setSource(urlPath);
+        loadMesh->setMeshName(meshName);
+        loadMesh->setSource(urlPath);
 
-    QString itemText = QString::number(currentIndex) + " : " + loadMesh->meshName();
+        int addIndex = Document::Instance().GetAddIndex();
+        QString itemText = QString::number(addIndex) + " : " + loadMesh->meshName();
 
-    ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
-    item->SetIndex(currentIndex);
-    item->SetName(loadMesh->meshName());
+        ModelListWidgetItem* item = new ModelListWidgetItem(QIcon(IMAGE_PATH_MODEL_WIDGET_ITEM), itemText);
+        item->SetIndex(addIndex);
+        item->SetName(loadMesh->meshName());
 
-    listWidget->addItem(item);
+        listWidget->addItem(item);
 
-    emit AddModel(currentIndex, loadMesh);
-    currentIndex++;
+        emit AddModel(addIndex, loadMesh);
+        Document::Instance().SetAddIndex(addIndex + 1);
+        Document::Instance().SetSelectedIndex(addIndex + 1);
+    }
 }

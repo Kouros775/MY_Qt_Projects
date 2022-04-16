@@ -2,6 +2,8 @@
 #include <Qt3DExtras>
 #include <Qt3DRender>
 #include <Qt3DCore/QEntity>
+#include <Qt3DExtras/QCuboidMesh>
+
 
 #include "Command/Transform/commandtransformtranslate.h"
 #include "Render/meshmodel.h"
@@ -64,12 +66,12 @@ Qt3DCore::QEntity* Renderer::Initialize(Qt3DRender::QCamera* paramCamera)
 /// \param paramMesh
 /// \return
 ///
-bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
+bool Renderer::AddModel(const int& paramIndex, const QString& paramName, Qt3DRender::QGeometryRenderer* paramMesh)
 {
     bool bRes = false;
 
     MeshModel* model = new MeshModel(rootEntity);
-    model->setObjectName(paramMesh->meshName());
+    model->setObjectName(paramName);
     model->SetIndex(paramIndex);
 
     // >> mesh
@@ -84,7 +86,7 @@ bool Renderer::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 
     // >> material
     Qt3DExtras::QPhongMaterial* material = new Qt3DExtras::QPhongMaterial(model);
-    QColor color(100, 100, 100);
+    QColor color(200, 200, 200);
     material->setDiffuse(color);
     material->setSpecular(color);
     material->setAmbient(color);
@@ -134,22 +136,32 @@ bool Renderer::SelectModel(const int &paramIndex)
 
          if(nullptr != model)
          {
-             Qt3DExtras::QPhongMaterial* material = model->GetMaterial();
-             QColor color(100, 100, 100);
-             material->setDiffuse(color);
-             material->setSpecular(color);
-             material->setAmbient(color);
+             Qt3DRender::QMaterial* material = model->GetMaterial();
+             Qt3DExtras::QPhongMaterial* phongMaterial = dynamic_cast<Qt3DExtras::QPhongMaterial*>(material);
+
+             if(phongMaterial)
+             {
+                 QColor color(200, 200, 200);
+                 phongMaterial->setDiffuse(color);
+                 phongMaterial->setSpecular(color);
+                 phongMaterial->setAmbient(color);
+             }
          }
     }
 
     MeshModel* model = GetModel(paramIndex);
     if(nullptr != model)
     {
-        Qt3DExtras::QPhongMaterial* material = model->GetMaterial();
-        QColor color(200, 100, 100);
-        material->setDiffuse(color);
-        material->setSpecular(color);
-        material->setAmbient(color);
+        Qt3DRender::QMaterial* material = model->GetMaterial();
+        Qt3DExtras::QPhongMaterial* phongMaterial = dynamic_cast<Qt3DExtras::QPhongMaterial*>(material);
+
+        if(phongMaterial)
+        {
+            QColor color(100, 100, 100);
+            phongMaterial->setDiffuse(color);
+            phongMaterial->setSpecular(color);
+            phongMaterial->setAmbient(color);
+        }
     }
     else
     {
@@ -158,6 +170,72 @@ bool Renderer::SelectModel(const int &paramIndex)
 
     return bRes;
 }
+
+bool Renderer::SetMaterial(const int &paramIndex, const eMaterialType &paramMaterialType)
+{
+    bool bRes = false;
+
+    MeshModel* meshModel = GetModel(paramIndex);
+    if(meshModel)
+    {
+        Qt3DRender::QMaterial* material = meshModel->GetMaterial();
+        material->~QMaterial();
+
+        if(eMaterialType::PhongMaterial == paramMaterialType)
+        {
+            Qt3DExtras::QPhongMaterial* phongMaterial = new Qt3DExtras::QPhongMaterial(meshModel);
+            meshModel->addComponent(phongMaterial);
+
+            QColor color(200, 200, 200);
+            phongMaterial->setDiffuse(color);
+            phongMaterial->setSpecular(color);
+            phongMaterial->setAmbient(color);
+            phongMaterial->setShininess(3.0f);
+        }
+        else if(eMaterialType::GoochMaterial == paramMaterialType)
+        {
+            Qt3DExtras::QGoochMaterial* goochMaterial = new Qt3DExtras::QGoochMaterial(meshModel);
+            meshModel->addComponent(goochMaterial);
+
+            QColor color(200, 200, 200);
+            goochMaterial->setDiffuse(color);
+            goochMaterial->setSpecular(color);
+            goochMaterial->setShininess(3.0f);
+        }
+        bRes = true;
+    }
+
+    return bRes;
+}
+
+bool Renderer::SetColor(const int &paramIndex, const QColor &paramColor)
+{
+    bool bRes = false;
+
+    MeshModel* meshModel = GetModel(paramIndex);
+    if(meshModel)
+    {
+        Qt3DRender::QMaterial* material = meshModel->GetMaterial();
+
+        Qt3DExtras::QPhongMaterial* phongMaterial = dynamic_cast<Qt3DExtras::QPhongMaterial*>(material);
+        if(phongMaterial)
+        {
+            phongMaterial->setDiffuse(paramColor);
+            phongMaterial->setSpecular(paramColor);
+            phongMaterial->setAmbient(paramColor);
+            phongMaterial->setShininess(3.0f);
+
+            bRes = true;
+        }
+        else
+        {
+
+        }
+    }
+
+    return bRes;
+}
+
 
 bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const QVector3D &endPos) const
 {
@@ -173,6 +251,8 @@ bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const
         moveAmount.setZ(0.0f);
 
         transform->setTranslation(currentPosition + moveAmount);
+
+        bRes = true;
     }
     else
     {
@@ -197,7 +277,16 @@ bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, co
         QMatrix4x4 rotateMatrix;
         rotateMatrix.rotate(rotateDegree, rotateAxis);
 
-        transform->setMatrix(rotateMatrix * transform->matrix());
+        QVector3D translateVector = transform->translation();
+
+        transform->setTranslation(-translateVector);
+        auto q = transform->rotation();
+        QMatrix4x4 qM;
+        qM.rotate(q);
+
+        transform->setMatrix(rotateMatrix * qM);
+        transform->setTranslation(translateVector);
+        bRes = true;
     }
     else
     {
@@ -216,15 +305,24 @@ bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, co
 /// \param endPoint
 /// \return
 ///
-bool Renderer::Scale(const int& paramIndex, const QPoint& startPoint, const QPoint& endPoint)
+bool Renderer::Scale(const MeshModel* paramModel, const float& paramDelta)
 {
     bool bRes = false;
 
-    MeshModel* model = GetModel(paramIndex);
-    if(nullptr != model)
+    if(nullptr != paramModel)
     {
-        //Qt3DCore::QTransform* transform = model->GetTransform();
-        //transform->set
+        Qt3DCore::QTransform* transform = paramModel->GetTransform();
+
+        if(paramDelta > 0.0f)
+        {
+            transform->setScale3D(QVector3D(2.0f, 2.0f, 2.0f));
+        }
+        else
+        {
+            transform->setScale3D(QVector3D(-2.0f, -2.0f, -2.0f));
+        }
+
+        bRes = true;
     }
     else
     {
@@ -246,11 +344,24 @@ MeshModel *Renderer::GetModel(const int &paramIndex) const
 }
 
 
+void Renderer::AddCube(const int& paramIndex, const QVector3D paramExtents)
+{
+    Qt3DExtras::QCuboidMesh* cubeMesh = new Qt3DExtras::QCuboidMesh(rootEntity);
+
+    cubeMesh->setXExtent(paramExtents.x());
+    cubeMesh->setYExtent(paramExtents.y());
+    cubeMesh->setZExtent(paramExtents.z());
+
+    this->AddModel(paramIndex, "Cube", cubeMesh);
+}
+
+
 void Renderer::pressed(Qt3DRender::QPickEvent *pick)
 {
     QVector3D start = pick->worldIntersection();
     startWorldPosition = start;
 }
+
 
 void Renderer::moved(Qt3DRender::QPickEvent *pick)
 {
@@ -268,77 +379,4 @@ void Renderer::moved(Qt3DRender::QPickEvent *pick)
     }
 
     startWorldPosition = world;
-}
-
-void Renderer::initializeLight()
-{
-    float intensity = 0.4f;
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(0, 0, 60.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(0, 0, -60.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(60, 0, 0.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(-60, 0, 0.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(0, 60, 0.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    {
-        Qt3DCore::QEntity *lightEntity = new Qt3DCore::QEntity(rootEntity);
-        Qt3DRender::QPointLight *light = new Qt3DRender::QPointLight(lightEntity);
-        light->setColor("white");
-        light->setIntensity(intensity);
-        lightEntity->addComponent(light);
-
-        Qt3DCore::QTransform *lightTransform = new Qt3DCore::QTransform(lightEntity);
-        lightTransform->setTranslation(QVector3D(0, -60, 0.0f));
-        lightEntity->addComponent(lightTransform);
-    }
-    //// << light
-
 }

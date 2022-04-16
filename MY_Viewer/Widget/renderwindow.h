@@ -21,19 +21,17 @@ public:
     void Initialize();
 
 
-    // QWindow interface
-protected:
-    void mousePressEvent(QMouseEvent* event) override;
-    void mouseReleaseEvent(QMouseEvent* event) override;
-    void mouseMoveEvent(QMouseEvent* event) override;
-
-
 public slots:
     void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     void RemoveModel(const int& paramIndex);
     void SelectModel(const int& paramIndex);
+    void EditModelColor(const int& paramIndex, const QColor& paramColor);
 private:
     Renderer* renderer;
+
+    // QWindow interface
+protected:
+    void wheelEvent(QWheelEvent *) override;
 };
 
 #endif // RENDERWINDOW_H

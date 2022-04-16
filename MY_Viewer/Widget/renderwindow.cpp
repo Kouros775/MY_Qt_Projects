@@ -4,6 +4,7 @@
 #include <QMouseEvent>
 #include <Qt3DRender/QMesh>
 
+#include "Document/document.h"
 #include "Render/renderer.h"
 
 
@@ -18,7 +19,6 @@ RenderWindow::RenderWindow(QScreen *screen)
 
 RenderWindow::~RenderWindow()
 {
-    qDebug() <<__FUNCTION__;
 }
 
 
@@ -33,7 +33,7 @@ void RenderWindow::Initialize()
 
 void RenderWindow::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
-    renderer->AddModel(paramIndex, paramMesh);
+    renderer->AddModel(paramIndex, paramMesh->meshName(), paramMesh);
 }
 
 void RenderWindow::RemoveModel(const int &paramIndex)
@@ -46,19 +46,16 @@ void RenderWindow::SelectModel(const int &paramIndex)
     renderer->SelectModel(paramIndex);
 }
 
-
-void RenderWindow::mousePressEvent(QMouseEvent *event)
+void RenderWindow::EditModelColor(const int &paramIndex, const QColor &paramColor)
 {
-    qDebug() <<__FUNCTION__;
+    renderer->SetColor(paramIndex, paramColor);
 }
-
-
-void RenderWindow::mouseReleaseEvent(QMouseEvent *event)
+void RenderWindow::wheelEvent(QWheelEvent *evt)
 {
-    Q_UNUSED(event);
-}
-
-void RenderWindow::mouseMoveEvent(QMouseEvent *event)
-{
-    qDebug() <<__FUNCTION__;
+    //MeshModel* meshModel = renderer->GetModel(1);
+    //
+    //if(nullptr != meshModel)
+    //{
+    //    //renderer->Scale(meshModel, evt->delta());
+    //}
 }

@@ -27,7 +27,6 @@ signals:
 
 private:
     QListWidget*    listWidget;
-    int             currentIndex;
 };
 
 #endif // COMMANDLOADMODEL_H

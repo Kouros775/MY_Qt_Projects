@@ -9,5 +9,6 @@
         <file>images/model_image.png</file>
         <file>images/model_delete.png</file>
         <file>images/model_torus.png</file>
+        <file>images/edit_model_color.png</file>
     </qresource>
 </RCC>

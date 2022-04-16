@@ -2,7 +2,7 @@
 #include <QDebug>
 #include <Qt3DCore/QEntity>
 #include <Qt3DCore/QTransform>
-#include <Qt3DExtras/QPhongMaterial>
+#include <Qt3DRender/QMaterial>
 
 
 MeshModel::MeshModel(Qt3DCore::QEntity* parent)
@@ -42,16 +42,16 @@ Qt3DCore::QTransform *MeshModel::GetTransform() const
     return transform;
 }
 
-Qt3DExtras::QPhongMaterial *MeshModel::GetMaterial() const
+Qt3DRender::QMaterial *MeshModel::GetMaterial() const
 {
-    Qt3DExtras::QPhongMaterial* material = nullptr;
+    Qt3DRender::QMaterial* material = nullptr;
 
     //QComponents
     Qt3DCore::QComponentVector components = this->components();
 
     for(int i = 0 ; i < components.size() ; i++)
     {
-        Qt3DExtras::QPhongMaterial* component = dynamic_cast<Qt3DExtras::QPhongMaterial*>(components[i]);
+        Qt3DRender::QMaterial* component = dynamic_cast<Qt3DRender::QMaterial*>(components[i]);
 
         if(nullptr != component)
         {

@@ -25,7 +25,9 @@ SOURCES += \
     Command/commandloadmodel.cpp \
     Command/commandremovemodel.cpp \
     Command/commandselectlistwidgetitem.cpp \
-    Command/commandtorusadd.cpp
+    Command/commandtorusadd.cpp \
+    Document/document.cpp \
+    Command/commandeditmodelcolor.cpp
 
 HEADERS += \
     Render/meshmodel.h \
@@ -41,7 +43,9 @@ HEADERS += \
     Command/commandloadmodel.h \
     Command/commandremovemodel.h \
     Command/commandselectlistwidgetitem.h \
-    Command/commandtorusadd.h
+    Command/commandtorusadd.h \
+    Document/document.h \
+    Command/commandeditmodelcolor.h
 
 
 # Default rules for deployment.

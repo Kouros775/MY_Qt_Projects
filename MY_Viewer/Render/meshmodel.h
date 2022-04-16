@@ -7,18 +7,13 @@
 
 namespace Qt3DCore
 {
-    class QComponent;
-    class QEntity;
     class QTransform;
 }
 namespace Qt3DRender
 {
-    class QPickEvent;
+    class QMaterial;
 }
-namespace Qt3DExtras
-{
-    class QPhongMaterial;
-}
+
 
 class MeshModel : public Qt3DCore::QEntity
 {
@@ -31,7 +26,7 @@ public:
     int GetIndex() const {return index;}
 
     Qt3DCore::QTransform* GetTransform() const;
-    Qt3DExtras::QPhongMaterial* GetMaterial() const;
+    Qt3DRender::QMaterial* GetMaterial() const;
 
 private:
     int index;
