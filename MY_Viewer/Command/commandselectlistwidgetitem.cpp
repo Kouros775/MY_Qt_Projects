@@ -23,6 +23,6 @@ void CommandSelectListWidgetItem::Execute()
 void CommandSelectListWidgetItem::ItemPressed(QListWidgetItem *item)
 {
     ModelListWidgetItem* modelItem = dynamic_cast<ModelListWidgetItem*>(item);
-    emit SelectModel(modelItem->GetIndex());
+    //emit SelectModel(modelItem->GetIndex());
     Document::Instance().SetSelectedIndex(modelItem->GetIndex());
 }

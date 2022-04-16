@@ -47,9 +47,11 @@ void CommandLoadModel::Execute()
         item->SetName(loadMesh->meshName());
 
         listWidget->addItem(item);
+        listWidget->setCurrentItem(item);
+
 
         emit AddModel(addIndex, loadMesh);
         Document::Instance().SetAddIndex(addIndex + 1);
-        Document::Instance().SetSelectedIndex(addIndex + 1);
+        Document::Instance().SetSelectedIndex(addIndex);
     }
 }

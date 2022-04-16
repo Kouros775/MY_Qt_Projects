@@ -27,7 +27,9 @@ SOURCES += \
     Command/commandselectlistwidgetitem.cpp \
     Command/commandtorusadd.cpp \
     Document/document.cpp \
-    Command/commandeditmodelcolor.cpp
+    Command/commandeditmodelcolor.cpp \
+    Command/commandaddtorus.cpp \
+    Command/commandaddcube.cpp
 
 HEADERS += \
     Render/meshmodel.h \
@@ -45,7 +47,9 @@ HEADERS += \
     Command/commandselectlistwidgetitem.h \
     Command/commandtorusadd.h \
     Document/document.h \
-    Command/commandeditmodelcolor.h
+    Command/commandeditmodelcolor.h \
+    Command/commandaddtorus.h \
+    Command/commandaddcube.h
 
 
 # Default rules for deployment.

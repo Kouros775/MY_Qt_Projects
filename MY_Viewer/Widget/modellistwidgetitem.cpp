@@ -11,5 +11,4 @@ ModelListWidgetItem::ModelListWidgetItem(const QIcon &icon, const QString &text,
 
 ModelListWidgetItem::~ModelListWidgetItem()
 {
-    qDebug() <<__FUNCTION__;
 }

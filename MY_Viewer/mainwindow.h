@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+
+class CommandAddCube;
+class CommandAddTorus;
 class CommandLoadModel;
 class CommandRemoveModel;
 class CommandEditModelColor;
@@ -24,6 +27,10 @@ private:
     void addRenderWidget();
     void addCommands();
 
+
+private slots:
+    void slotSelctListWidget(const int& paramIndex);
+    void slotRemoveAllWidget();
 private:
     RenderWidget*   renderWidget;
     QListWidget*    listWidget;
@@ -32,6 +39,8 @@ private:
     CommandRemoveModel*             commandRemoveModel;
     CommandSelectListWidgetItem*    commandSelectWidgetItem;
     CommandEditModelColor*          commandEditModelColor;
+    CommandAddTorus*                commandAddTorus;
+    CommandAddCube*                 commandAddCube;
 };
 
 #endif // MAINWINDOW_H

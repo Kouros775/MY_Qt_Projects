@@ -16,8 +16,11 @@ public:
     void SetAddIndex(const int& paramIndex){this->addIndex = paramIndex;}
     int GetAddIndex() const {return this->addIndex;}
 
-    void SetSelectedIndex(const int& paramIndex){this->selectedIndex = paramIndex;}
+    void SetSelectedIndex(const int& paramIndex);
     int GetSelectedIndex() const {return this->selectedIndex;}
+
+signals:
+    void signalSelectItem(const int& paramIndex);
 private:
     explicit Document(QObject *parent = nullptr);
     ~Document();

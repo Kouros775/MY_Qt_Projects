@@ -9,8 +9,6 @@ namespace Qt3DCore
 {
     class QEntity;
 }
-
-
 class MeshModel;
 
 
@@ -24,6 +22,7 @@ public:
 
     bool AddModel(const int& paramIndex, MeshModel* paramModel);
     bool RemoveModel(const int& paramIndex);
+    bool RemoveAllModel();
     bool IsEmptyIndex(const int& paramIndex) const;
 
     MeshModel* GetModel(const int& paramIndex) const;

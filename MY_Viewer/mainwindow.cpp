@@ -9,22 +9,25 @@
 #include <QDockWidget>
 #include <Qt3DRender/QMesh>
 
+#include "Command/commandaddtorus.h"
+#include "Command/commandaddcube.h"
 #include "Command/commandloadmodel.h"
 #include "Command/commandremovemodel.h"
 #include "Command/commandeditmodelcolor.h"
 #include "Command/commandselectlistwidgetitem.h"
+#include "Document/document.h"
 #include "Widget/renderwidget.h"
 #include "Widget/renderwindow.h"
 #include "Widget/modellistwidgetitem.h"
 
 
-#define IMAGE_PATH_NEW_ACTION          "://images/new.png"
+#define IMAGE_PATH_NEW_ACTION           "://images/new.png"
 #define IMAGE_PATH_OPEN_ACTION          ":/images/open.png"
 #define IMAGE_PATH_DELETE_ACTION        "://images/model_delete.png"
-
 #define IMAGE_PATH_MODEL_ADD_TORUS      "://images/model_torus.png"
+#define IMAGE_PATH_MODEL_ADD_CUBE       "://images/model_cube.png"
+#define IMAGE_PATH_EDIT_MODEL_COLOR     "://images/edit_model_color.png"
 
-#define IMAGE_PATH_EDIT_MODEL_COLOR      "://images/edit_model_color.png"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,6 +36,8 @@ MainWindow::MainWindow(QWidget *parent)
     , commandRemoveModel(nullptr)
     , commandSelectWidgetItem(nullptr)
     , commandEditModelColor(nullptr)
+    , commandAddTorus(nullptr)
+    , commandAddCube(nullptr)
 {
     addRenderWidget();
     addListWidget();
@@ -60,6 +65,8 @@ void MainWindow::addToolBarActions()
     newAct = new QAction(QIcon(IMAGE_PATH_NEW_ACTION), tr("New Scene"), this);
     newAct->setShortcuts(QKeySequence::New);
     newAct->setStatusTip(tr("New Scene"));
+    connect(newAct, &QAction::triggered, renderWindow, &RenderWindow::RemoveAllModel);
+    connect(newAct, &QAction::triggered, this, &MainWindow::slotRemoveAllWidget);
     fileMenu->addAction(newAct);
 
     QAction* openAct;
@@ -90,9 +97,16 @@ void MainWindow::addToolBarActions()
     QAction* addTorus;
     addTorus = new QAction(QIcon(IMAGE_PATH_MODEL_ADD_TORUS), tr("&Add Torus"), this);
     addTorus->setStatusTip(tr("Add Torus Model"));
-    //connect(deleteAct, &QAction::triggered, this, &MainWindow::deleteModel);
+    connect(addTorus, &QAction::triggered, commandAddTorus, &CommandAddTorus::Execute);
+    connect(commandAddTorus, &CommandAddTorus::AddTorus, renderWindow, &RenderWindow::AddTorus);
     ModelMenu->addAction(addTorus);
 
+    QAction* addCube;
+    addCube = new QAction(QIcon(IMAGE_PATH_MODEL_ADD_CUBE), tr("&Add Cube"), this);
+    addCube->setStatusTip(tr("Add Cube Model"));
+    connect(addCube, &QAction::triggered, commandAddCube, &CommandAddCube::Execute);
+    connect(commandAddCube, &CommandAddCube::AddCube, renderWindow, &RenderWindow::AddCube);
+    ModelMenu->addAction(addCube);
     // << Model
 
 
@@ -114,6 +128,9 @@ void MainWindow::addListWidget()
     listWidget = new QListWidget(dock);
     dock->setWidget(listWidget);
     addDockWidget(Qt::RightDockWidgetArea, dock);
+
+    auto& document = Document::Instance();
+    connect(&document, &Document::signalSelectItem, this, &MainWindow::slotSelctListWidget);
 }
 
 void MainWindow::addRenderWidget()
@@ -129,9 +146,32 @@ void MainWindow::addCommands()
     commandLoadModel = new CommandLoadModel(this);
     commandRemoveModel = new CommandRemoveModel(this);
     commandEditModelColor = new CommandEditModelColor(this);
+    commandAddTorus = new CommandAddTorus(this);
+    commandAddCube= new CommandAddCube(this);
 
+    commandAddTorus->SetListWidget(listWidget);
+    commandAddCube->SetListWidget(listWidget);
     commandLoadModel->SetListWidget(listWidget);
     commandRemoveModel->SetListWidget(listWidget);
 }
 
+
+void MainWindow::slotSelctListWidget(const int &paramIndex)
+{
+    for (int row = 0; row < listWidget->count(); row++)
+    {
+        QListWidgetItem *item = listWidget->item(row);
+        if(dynamic_cast<ModelListWidgetItem*>(item)->GetIndex() == paramIndex)
+            listWidget->setCurrentItem(item);
+    }
+}
+
+void MainWindow::slotRemoveAllWidget()
+{
+    for (int row = 0; row < listWidget->count(); row++)
+    {
+        QListWidgetItem *item = listWidget->item(row);
+        item->~QListWidgetItem();
+    }
+}
 

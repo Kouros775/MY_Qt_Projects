@@ -2,10 +2,8 @@
 #include <Qt3DExtras>
 #include <Qt3DRender>
 #include <Qt3DCore/QEntity>
-#include <Qt3DExtras/QCuboidMesh>
 
-
-#include "Command/Transform/commandtransformtranslate.h"
+#include "Document/document.h"
 #include "Render/meshmodel.h"
 #include "Render/renderbase.h"
 #include "Render/rendercamera.h"
@@ -20,12 +18,9 @@ Renderer::Renderer(QObject *parent)
     , rootEntity(nullptr)
     , camera(nullptr)
     , renderBase(nullptr)
-    , commandTranslate(nullptr)
 {
     renderBase = new RenderBase(this);
     camera = new RenderCamera(this);
-
-    commandTranslate = new CommandTransformTranslate(this);
 }
 
 
@@ -90,7 +85,7 @@ bool Renderer::AddModel(const int& paramIndex, const QString& paramName, Qt3DRen
     material->setDiffuse(color);
     material->setSpecular(color);
     material->setAmbient(color);
-    material->setShininess(3.0f);
+    //material->setShininess(3.0f);
     model->addComponent(material);
     // << material
 
@@ -99,7 +94,6 @@ bool Renderer::AddModel(const int& paramIndex, const QString& paramName, Qt3DRen
     picker->setDragEnabled(true);
     QObject::connect(picker, &Qt3DRender::QObjectPicker::pressed, this, &Renderer::pressed);
     QObject::connect(picker, &Qt3DRender::QObjectPicker::moved, this, &Renderer::moved);
-    //QObject::connect(picker, &Qt3DRender::QObjectPicker::entered, this, &Renderer::moved);
     model->addComponent(picker);
     // << Picker
 
@@ -120,6 +114,15 @@ bool Renderer::RemoveModel(const int &paramIndex)
     bool bRes = false;
 
     bRes = renderBase->RemoveModel(paramIndex);
+
+    return bRes;
+}
+
+bool Renderer::RemoveAllModel()
+{
+    bool bRes = false;
+
+    renderBase->RemoveAllModel();
 
     return bRes;
 }
@@ -157,7 +160,7 @@ bool Renderer::SelectModel(const int &paramIndex)
 
         if(phongMaterial)
         {
-            QColor color(100, 100, 100);
+            QColor color = model->GetColor();
             phongMaterial->setDiffuse(color);
             phongMaterial->setSpecular(color);
             phongMaterial->setAmbient(color);
@@ -215,6 +218,8 @@ bool Renderer::SetColor(const int &paramIndex, const QColor &paramColor)
     MeshModel* meshModel = GetModel(paramIndex);
     if(meshModel)
     {
+        meshModel->SetColor(paramColor);
+
         Qt3DRender::QMaterial* material = meshModel->GetMaterial();
 
         Qt3DExtras::QPhongMaterial* phongMaterial = dynamic_cast<Qt3DExtras::QPhongMaterial*>(material);
@@ -223,7 +228,6 @@ bool Renderer::SetColor(const int &paramIndex, const QColor &paramColor)
             phongMaterial->setDiffuse(paramColor);
             phongMaterial->setSpecular(paramColor);
             phongMaterial->setAmbient(paramColor);
-            phongMaterial->setShininess(3.0f);
 
             bRes = true;
         }
@@ -237,7 +241,7 @@ bool Renderer::SetColor(const int &paramIndex, const QColor &paramColor)
 }
 
 
-bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const QVector3D &endPos) const
+bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const QVector3D &endPos)
 {
     bool bRes = false;
 
@@ -246,13 +250,11 @@ bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const
     {
         Qt3DCore::QTransform* transform = model->GetTransform();
 
-        QVector3D currentPosition = transform->translation();
         QVector3D moveAmount = endPos - startPos;
         moveAmount.setZ(0.0f);
+        moveAmount += transform->translation();
 
-        transform->setTranslation(currentPosition + moveAmount);
-
-        bRes = true;
+        transform->setTranslation(moveAmount);
     }
     else
     {
@@ -262,7 +264,7 @@ bool Renderer::Translate(const int &paramIndex, const QVector3D &startPos, const
     return bRes;
 }
 
-bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, const QVector3D &endPos) const
+bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, const QVector3D &endPos)
 {
     bool bRes = false;
 
@@ -271,22 +273,25 @@ bool Renderer::Rotate(const MeshModel *paramModel, const QVector3D &startPos, co
         Qt3DCore::QTransform* transform = paramModel->GetTransform();
 
         QVector3D rotateAxis = QVector3D::crossProduct(startPos, endPos);
+        rotateAxis.normalize();
 
         float rotateDegree = 5.0f;
+        QMatrix4x4 matrix;
+        matrix.rotate(rotateDegree, rotateAxis);
 
         QMatrix4x4 rotateMatrix;
-        rotateMatrix.rotate(rotateDegree, rotateAxis);
+        rotateMatrix.rotate(transform->rotation());
+        rotateMatrix = matrix * rotateMatrix;
 
-        QVector3D translateVector = transform->translation();
+        QVector3D scale = transform->scale3D();
+        QMatrix4x4 scaleMatrix;
+        scaleMatrix.scale(scale);
 
-        transform->setTranslation(-translateVector);
-        auto q = transform->rotation();
-        QMatrix4x4 qM;
-        qM.rotate(q);
+        QVector3D translate = transform->translation();
+        QMatrix4x4 translateMatrix;
+        translateMatrix.translate(translate);
 
-        transform->setMatrix(rotateMatrix * qM);
-        transform->setTranslation(translateVector);
-        bRes = true;
+        transform->setMatrix(translateMatrix * rotateMatrix * scaleMatrix);
     }
     else
     {
@@ -313,16 +318,41 @@ bool Renderer::Scale(const MeshModel* paramModel, const float& paramDelta)
     {
         Qt3DCore::QTransform* transform = paramModel->GetTransform();
 
+        QVector3D scale = transform->scale3D();
+
+        float scaleDelta;
         if(paramDelta > 0.0f)
         {
-            transform->setScale3D(QVector3D(2.0f, 2.0f, 2.0f));
+            scaleDelta = 0.1f;
         }
         else
         {
-            transform->setScale3D(QVector3D(-2.0f, -2.0f, -2.0f));
+            scaleDelta = -0.1f;
         }
 
-        bRes = true;
+
+        scale.setX(scale.x() + scaleDelta);
+        scale.setY(scale.y() + scaleDelta);
+        scale.setZ(scale.z() + scaleDelta);
+
+        if(scale.x() < 0.1f)
+            scale.setX(0.1f);
+        if(scale.y() < 0.1f)
+            scale.setY(0.1f);
+        if(scale.z() < 0.1f)
+            scale.setZ(0.1f);
+
+        QMatrix4x4 scaleMatrix;
+        scaleMatrix.scale(scale);
+
+        QMatrix4x4 rotateMatrix;
+        rotateMatrix.rotate(transform->rotation());
+
+        QVector3D translate = transform->translation();
+        QMatrix4x4 translateMatrix;
+        translateMatrix.translate(translate);
+
+        transform->setMatrix(translateMatrix * rotateMatrix * scaleMatrix);
     }
     else
     {
@@ -356,10 +386,29 @@ void Renderer::AddCube(const int& paramIndex, const QVector3D paramExtents)
 }
 
 
+void Renderer::AddTorus(const int &paramIndex, const int &paramRadius, const int &paramMinorRadius, const int &paramRings, const int &paramSlices)
+{
+    Qt3DExtras::QTorusMesh *torusMesh = new Qt3DExtras::QTorusMesh(rootEntity);
+
+    torusMesh->setRadius(paramRadius);
+    torusMesh->setMinorRadius(paramMinorRadius);
+    torusMesh->setRings(paramRings);
+    torusMesh->setSlices(paramSlices);
+
+    this->AddModel(paramIndex, "Torus", torusMesh);
+}
+
+
 void Renderer::pressed(Qt3DRender::QPickEvent *pick)
 {
-    QVector3D start = pick->worldIntersection();
-    startWorldPosition = start;
+    startWorldPosition = pick->worldIntersection();
+
+    if(Qt3DRender::QPickEvent::Buttons::LeftButton & pick->buttons())
+    {
+        MeshModel* pickModel = qobject_cast<MeshModel*>(sender()->parent());
+        int index = pickModel->GetIndex();
+        Document::Instance().SetSelectedIndex(index);
+    }
 }
 
 

@@ -22,6 +22,9 @@ public:
 
 
 public slots:
+    void RemoveAllModel();
+    void AddCube(const int& paramIndex);
+    void AddTorus(const int& paramIndex);
     void AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh);
     void RemoveModel(const int& paramIndex);
     void SelectModel(const int& paramIndex);

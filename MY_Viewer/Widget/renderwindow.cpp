@@ -30,32 +30,53 @@ void RenderWindow::Initialize()
     setRootEntity(rootEntity);
 }
 
+void RenderWindow::RemoveAllModel()
+{
+    renderer->RemoveAllModel();
+}
+
+void RenderWindow::AddCube(const int &paramIndex)
+{
+    renderer->AddCube(paramIndex);
+}
+
+void RenderWindow::AddTorus(const int &paramIndex)
+{
+    renderer->AddTorus(paramIndex);
+}
+
 
 void RenderWindow::AddModel(const int& paramIndex, Qt3DRender::QMesh* paramMesh)
 {
     renderer->AddModel(paramIndex, paramMesh->meshName(), paramMesh);
 }
 
+
 void RenderWindow::RemoveModel(const int &paramIndex)
 {
     renderer->RemoveModel(paramIndex);
 }
+
 
 void RenderWindow::SelectModel(const int &paramIndex)
 {
     renderer->SelectModel(paramIndex);
 }
 
+
 void RenderWindow::EditModelColor(const int &paramIndex, const QColor &paramColor)
 {
     renderer->SetColor(paramIndex, paramColor);
 }
+
+
 void RenderWindow::wheelEvent(QWheelEvent *evt)
 {
-    //MeshModel* meshModel = renderer->GetModel(1);
-    //
-    //if(nullptr != meshModel)
-    //{
-    //    //renderer->Scale(meshModel, evt->delta());
-    //}
+    int selectedIndex = Document::Instance().GetSelectedIndex();
+    MeshModel* meshModel = renderer->GetModel(selectedIndex);
+
+    if(nullptr != meshModel)
+    {
+        renderer->Scale(meshModel, evt->delta());
+    }
 }

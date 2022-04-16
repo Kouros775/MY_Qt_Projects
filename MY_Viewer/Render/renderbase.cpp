@@ -37,7 +37,6 @@ bool RenderBase::AddModel(const int &paramIndex, MeshModel *paramModel)
     }
     else
     {
-        assert(0);
     }
 
     return bRes;
@@ -58,10 +57,20 @@ bool RenderBase::RemoveModel(const int &paramIndex)
     }
     else
     {
-        assert(0);
     }
 
     return bRes;
+}
+
+bool RenderBase::RemoveAllModel()
+{
+    QMap<int, MeshModel*>::iterator iter = modelMap.begin();
+
+    for(iter ; iter != modelMap.end() ; iter++)
+    {
+        iter.value()->~MeshModel();
+        modelMap.erase(iter);
+    }
 }
 
 
@@ -97,7 +106,6 @@ MeshModel *RenderBase::GetModel(const int &paramIndex) const
     }
     else
     {
-        assert(0);
     }
 
     return model;
