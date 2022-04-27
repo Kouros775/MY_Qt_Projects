@@ -1,0 +1,23 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/background.png</file>
+        <file>images/stick.png</file>
+        <file>images/wheel.png</file>
+        <file>rectangle.qml</file>
+        <file>images/ani.gif</file>
+        <file>images/bluebackground.png</file>
+        <file>images/bluebutton.png</file>
+        <file>images/borderframe.png</file>
+        <file>images/bug.jpg</file>
+        <file>images/butterfly.png</file>
+        <file>images/glass_normal.png</file>
+        <file>images/HelloWorld80.png</file>
+        <file>images/lenna.png</file>
+        <file>images/login.png</file>
+        <file>images/masksource.png</file>
+        <file>images/qtlogo.png</file>
+        <file>images/signout.png</file>
+        <file>image.qml</file>
+    </qresource>
+</RCC>
