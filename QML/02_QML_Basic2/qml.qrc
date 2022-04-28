@@ -16,5 +16,15 @@
         <file>images/masksource.png</file>
         <file>images/signout.png</file>
         <file>anchors.qml</file>
+        <file>text_image_anchors.qml</file>
+        <file>gradient.qml</file>
+        <file>systempalette.qml</file>
+        <file>screen.qml</file>
+        <file>fontloader.qml</file>
+        <file>repeater.qml</file>
+        <file>image.qml</file>
+        <file>transformation.qml</file>
+        <file>button.qml</file>
+        <file>simple_accessible.qml</file>
     </qresource>
 </RCC>
