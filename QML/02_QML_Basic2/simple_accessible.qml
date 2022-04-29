@@ -1,6 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
-import "content"
+//import "../02_QML_Basic2"
+import "."
+
 
 Window
 {
