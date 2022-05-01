@@ -27,6 +27,8 @@
         <file>QML/09_SignalHandler_exam1.qml</file>
         <file>QML/09_SignalHandler_exam2.qml</file>
         <file>QML/01_Import_Box.qml</file>
-        <file>QML/01_Import_SubBox.qml</file>
+        <file>QML/Import_SubBox.qml</file>
+        <file>QML/SquareButton.qml</file>
+        <file>QML/09_SignalHandler_exam3.qml</file>
     </qresource>
 </RCC>

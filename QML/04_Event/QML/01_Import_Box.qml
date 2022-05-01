@@ -8,12 +8,9 @@ Window
     visible: true;
     width: 640;
     height: 480;
-    color: "red";
-    //01_Import_SubBox
-    //{
-    //    onClicked:
-    //    {
-    //        console.log("click.");
-    //    }
-    //}
+
+    Import_SubBox
+    {
+        id: subBox;
+    }
 }
