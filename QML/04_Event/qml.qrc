@@ -4,5 +4,29 @@
         <file>QML/MouseArea.qml</file>
         <file>QML/02_ContainsMouse.qml</file>
         <file>QML/03_Drag.qml</file>
+        <file>QML/04_TextInput.qml</file>
+        <file>QML/05_KeyNavigation.qml</file>
+        <file>QML/06_Keys.qml</file>
+        <file>images/ani.gif</file>
+        <file>images/bluebackground.png</file>
+        <file>images/bluebutton.png</file>
+        <file>images/borderframe.png</file>
+        <file>images/bug.jpg</file>
+        <file>images/butterfly.png</file>
+        <file>images/glass_normal.png</file>
+        <file>images/HelloWorld80.png</file>
+        <file>images/lenna.png</file>
+        <file>images/login.png</file>
+        <file>images/masksource.png</file>
+        <file>images/qtlogo.png</file>
+        <file>images/signout.png</file>
+        <file>QML/07_Flickable.qml</file>
+        <file>QML/08_Flickable_Ground.qml</file>
+        <file>images/ground.jpg</file>
+        <file>images/player.png</file>
+        <file>QML/09_SignalHandler_exam1.qml</file>
+        <file>QML/09_SignalHandler_exam2.qml</file>
+        <file>QML/01_Import_Box.qml</file>
+        <file>QML/01_Import_SubBox.qml</file>
     </qresource>
 </RCC>
