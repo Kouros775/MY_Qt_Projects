@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>QML/canvas_basic.qml</file>
+        <file>QML/canvas_rect.qml</file>
+        <file>QML/canvas_gradients.qml</file>
+        <file>QML/canvas_mousedrawing.qml</file>
+    </qresource>
+</RCC>
