@@ -30,5 +30,20 @@
         <file>QML/Import_SubBox.qml</file>
         <file>QML/SquareButton.qml</file>
         <file>QML/09_SignalHandler_exam3.qml</file>
+        <file>QML/09_SignalHandler_exam4.qml</file>
+        <file>QML/dynamic_main.qml</file>
+        <file>QML/page1.qml</file>
+        <file>QML/dynamic_component.qml</file>
+        <file>QML/application.qml</file>
+        <file>QML/myitem.qml</file>
+        <file>QML/key_main.qml</file>
+        <file>QML/keyreader.qml</file>
+        <file>QML/square.qml</file>
+        <file>QML/status.qml</file>
+        <file>QML/value_change.qml</file>
+        <file>QML/ExComponent.qml</file>
+        <file>QML/menu_main.qml</file>
+        <file>QML/menu1.qml</file>
+        <file>QML/menu2.qml</file>
     </qresource>
 </RCC>

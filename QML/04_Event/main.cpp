@@ -19,7 +19,17 @@ int main(int argc, char *argv[])
     //engine.load(QUrl(QStringLiteral("qrc:/QML/08_Flickable_Ground.qml")));
     //engine.load(QUrl(QStringLiteral("qrc:/QML/09_SignalHandler_exam1.qml")));
     //engine.load(QUrl(QStringLiteral("qrc:/QML/09_SignalHandler_exam2.qml")));
-    engine.load(QUrl(QStringLiteral("qrc:/QML/09_SignalHandler_exam3.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/09_SignalHandler_exam3.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/09_SignalHandler_exam4.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/dynamic_main.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/dynamic_component.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/application.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/key_main.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/square.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/status.qml")));
+    //engine.load(QUrl(QStringLiteral("qrc:/QML/value_change.qml")));
+    engine.load(QUrl(QStringLiteral("qrc:/QML/menu_main.qml")));
+
 
 
     if (engine.rootObjects().isEmpty())
