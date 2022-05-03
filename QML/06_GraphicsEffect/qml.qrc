@@ -1,0 +1,16 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>QML/effect1.qml</file>
+        <file>images/ball.png</file>
+        <file>images/bug.jpg</file>
+        <file>images/butterfly.png</file>
+        <file>images/glass_normal.png</file>
+        <file>images/glow_butterfly.png</file>
+        <file>images/lenna.png</file>
+        <file>images/masksource.png</file>
+        <file>QML/effect2.qml</file>
+        <file>QML/effect3.qml</file>
+        <file>QML/effect4.qml</file>
+    </qresource>
+</RCC>
