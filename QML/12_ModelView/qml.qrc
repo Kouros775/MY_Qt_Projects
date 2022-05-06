@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>listmodel_exam_1.qml</file>
+        <file>listmodel_exam_2.qml</file>
+        <file>list_view_header_footer.qml</file>
+    </qresource>
+</RCC>
